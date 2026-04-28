@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Plus, Minus, X, Trash2, Clock, Truck, Store, ArrowRight, Heart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Product } from '@/lib/db-utils';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from '@/lib/firebase';
+import { Product, createOrder } from '@/lib/db-utils';
 
 interface CartItem extends Product {
   qty: number;
@@ -76,21 +74,29 @@ export const OrderSystem = ({
     }
     setIsOrdering(true);
     try {
-      const orderId = `ORD-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
       const orderData = {
-        orderId, customerName, customerPhone,
-        items: cart.map(item => ({ productId: item.id, name: item.name, price: item.price, qty: item.qty })),
-        subtotal, deliveryFee, total, type: orderType,
+        customerName,
+        customerPhone,
+        items: cart.map(item => ({ 
+          productId: item.id!, 
+          name: item.name, 
+          price: item.price, 
+          qty: item.qty 
+        })),
+        total,
+        type: orderType,
         pickupTime: orderType === 'collect' ? pickupTime : null,
         deliveryAddress: orderType === 'delivery' ? { postcode, street } : null,
-        notes, status: 'new', createdAt: serverTimestamp()
+        notes
       };
-      await addDoc(collection(db, 'orders'), orderData);
-      setOrderSuccess(orderId);
-      setCart([]);
-      setIsCartOpen(false);
+      
+      const docRef = await createOrder(orderData as any);
+      if (docRef) {
+        setOrderSuccess(docRef.id);
+        setCart([]);
+        setIsCartOpen(false);
+      }
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, 'orders');
     } finally {
       setIsOrdering(false);
     }

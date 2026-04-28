@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Calendar, Users, Clock, MessageSquare, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from '@/lib/firebase';
+import { createBooking } from '@/lib/db-utils';
 
 export const BookingSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,12 +25,13 @@ export const BookingSection = () => {
     }
     setIsSubmitting(true);
     try {
-      const bookingId = `BK-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
-      await addDoc(collection(db, 'bookings'), { ...formData, bookingId, status: 'pending', createdAt: serverTimestamp() });
-      setSuccessId(bookingId);
-      setFormData({ name: '', phone: '', email: '', date: '', time: '', guests: 2, requests: '' });
+      const docRef = await createBooking(formData);
+      if (docRef) {
+        setSuccessId(docRef.id);
+        setFormData({ name: '', phone: '', email: '', date: '', time: '', guests: 2, requests: '' });
+      }
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, 'bookings');
+      // Error handled in utility
     } finally {
       setIsSubmitting(false);
     }

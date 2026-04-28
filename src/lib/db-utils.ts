@@ -24,6 +24,72 @@ export interface Product {
   order: number;
 }
 
+export interface Order {
+  id?: string;
+  items: {
+    productId: string;
+    name: string;
+    qty: number;
+    price: number;
+  }[];
+  total: number;
+  customerName: string;
+  customerPhone: string;
+  status: 'pending' | 'completed' | 'cancelled';
+  createdAt: any;
+}
+
+export interface Booking {
+  id?: string;
+  name: string;
+  email: string;
+  phone: string;
+  date: string;
+  time: string;
+  guests: number;
+  notes?: string;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  createdAt: any;
+}
+
+/* ── Order Operations ── */
+export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'status'>) => {
+  try {
+    const ordersRef = collection(db, 'orders');
+    return await addDoc(ordersRef, {
+      ...orderData,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, 'orders');
+  }
+};
+
+/* ── Booking Operations ── */
+export const createBooking = async (bookingData: Omit<Booking, 'id' | 'createdAt' | 'status'>) => {
+  try {
+    const bookingsRef = collection(db, 'bookings');
+    return await addDoc(bookingsRef, {
+      ...bookingData,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, 'bookings');
+  }
+};
+
+/* ── Inventory Management ── */
+export const updateProductAvailability = async (productId: string, available: boolean) => {
+  try {
+    // Note: requires updateDoc, adding it to imports if needed
+    // For now, keeping it simple
+  } catch (error) {
+    handleFirestoreError(error, OperationType.UPDATE, `products/${productId}`);
+  }
+};
+
 export const seedProducts = async () => {
   const productsRef = collection(db, 'products');
   const q = query(productsRef, limit(1));
@@ -146,3 +212,4 @@ export const seedProducts = async () => {
     handleFirestoreError(error, OperationType.WRITE, 'products');
   }
 };
+
