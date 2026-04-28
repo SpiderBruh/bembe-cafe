@@ -46,14 +46,16 @@ export const Navbar = ({ cartCount, onCartClick }: { cartCount: number, onCartCl
       <div
         className={`max-w-7xl mx-auto flex justify-between items-center transition-all duration-500 px-6 py-3 rounded-full ${
           isScrolled
-            ? 'liquid-glass bg-background/60'
+            ? 'liquid-glass bg-warm-white/80'
             : 'bg-transparent'
         }`}
       >
         {/* Brand Logo */}
         <a href="/" className="group relative cursor-pointer">
           <motion.span
-            className="font-display text-xl md:text-2xl font-bold text-warm-white italic tracking-tight block"
+            className={`font-display text-xl md:text-2xl font-bold italic tracking-tight block transition-colors duration-300 ${
+              isScrolled ? 'text-text-deep' : 'text-warm-white'
+            }`}
             whileHover={{ scale: 1.03 }}
             transition={{ type: 'spring', stiffness: 200, damping: 15 }}
           >
@@ -71,18 +73,26 @@ export const Navbar = ({ cartCount, onCartClick }: { cartCount: number, onCartCl
             <a
               key={link.name}
               href={link.href}
-              className="relative font-sans text-[11px] font-bold tracking-[0.25em] uppercase text-warm-white/60 hover:text-warm-white transition-colors duration-200 cursor-pointer group"
+              className={`relative font-sans text-[11px] font-bold tracking-[0.25em] uppercase transition-colors duration-300 cursor-pointer group ${
+                isScrolled 
+                  ? 'text-text-deep/60 hover:text-text-deep' 
+                  : 'text-warm-white/60 hover:text-warm-white'
+              }`}
             >
               {link.name}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary group-hover:w-full transition-all duration-300" />
             </a>
           ))}
 
-          <div className="h-4 w-[1px] bg-warm-white/15 mx-1" />
+          <div className={`h-4 w-[1px] mx-1 transition-colors duration-300 ${
+            isScrolled ? 'bg-text-deep/10' : 'bg-warm-white/15'
+          }`} />
 
           <button
             onClick={onCartClick}
-            className="relative p-2 text-warm-white/70 hover:text-primary transition-colors duration-200 cursor-pointer"
+            className={`relative p-2 transition-colors duration-300 cursor-pointer ${
+              isScrolled ? 'text-text-deep/70 hover:text-primary' : 'text-warm-white/70 hover:text-primary'
+            }`}
           >
             <motion.div
               whileHover={{ scale: 1.1 }}
@@ -109,7 +119,12 @@ export const Navbar = ({ cartCount, onCartClick }: { cartCount: number, onCartCl
 
         {/* Mobile Toggle */}
         <div className="md:hidden flex items-center gap-4">
-          <button onClick={onCartClick} className="relative p-2 text-warm-white cursor-pointer">
+          <button 
+            onClick={onCartClick} 
+            className={`relative p-2 transition-colors duration-300 cursor-pointer ${
+              isScrolled ? 'text-text-deep' : 'text-warm-white'
+            }`}
+          >
             <ShoppingCart className="size-5" />
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-accent text-warm-white text-[9px] font-black size-4 flex items-center justify-center rounded-full">
@@ -119,7 +134,9 @@ export const Navbar = ({ cartCount, onCartClick }: { cartCount: number, onCartCl
           </button>
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="text-warm-white hover:text-primary transition-colors duration-200 cursor-pointer"
+            className={`transition-colors duration-300 cursor-pointer ${
+              isScrolled ? 'text-text-deep hover:text-primary' : 'text-warm-white hover:text-primary'
+            }`}
           >
             <MenuIcon className="size-6" />
           </button>
