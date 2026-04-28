@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useRef } from "react"
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion"
-import { Star, ChevronDown, ArrowRight } from "lucide-react"
+import { Star, ArrowRight } from "lucide-react"
 
 /* ── Leaf SVG — minimalist line art decoration ── */
 const LeafDecoration = ({ className = "" }: { className?: string }) => (
@@ -76,13 +76,27 @@ export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollY } = useScroll()
 
+  // Parallax and scroll effects
   const opacity = useTransform(scrollY, [0, 400], [1, 0])
   const y1 = useTransform(scrollY, [0, 500], [0, 100])
+  const videoScale = useTransform(scrollY, [0, 500], [1.05, 1.2])
 
-  /* cleanup for scroll listener — taste §10 */
+  // Mouse tracking for ambient light (Liquid Motion - taste §7)
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 })
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 })
+
   useEffect(() => {
-    return () => {}
-  }, [])
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e
+      const { innerWidth, innerHeight } = window
+      mouseX.set(clientX - innerWidth / 2)
+      mouseY.set(clientY - innerHeight / 2)
+    }
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
+  }, [mouseX, mouseY])
 
   /* Stagger animation variants */
   const containerVariants = {
@@ -90,183 +104,195 @@ export default function Hero() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
       },
     },
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 24 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring" as const,
-        stiffness: 100,
-        damping: 20,
+        type: "spring",
+        stiffness: 80,
+        damping: 15,
       },
     },
+  }
+
+  const charVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 0.5 + i * 0.03,
+        duration: 0.8,
+        ease: [0.215, 0.61, 0.355, 1],
+      },
+    }),
+  }
+
+  const splitText = (text: string) => {
+    return text.split("").map((char, i) => (
+      <motion.span
+        key={i}
+        custom={i}
+        variants={charVariants}
+        initial="hidden"
+        animate="visible"
+        className="inline-block"
+      >
+        {char === " " ? "\u00A0" : char}
+      </motion.span>
+    ))
   }
 
   return (
     <div
       ref={containerRef}
-      className="relative min-h-[100dvh] w-full overflow-hidden bg-text-deep flex items-center px-6 md:px-12 lg:px-24"
+      className="relative min-h-[100dvh] w-full overflow-hidden bg-[#0A0A0A] flex items-center px-6 md:px-12 lg:px-24"
     >
-      {/* ── Video Background ── */}
-      <div className="absolute inset-0 z-0">
+      {/* ── Video Background with Parallax Scale ── */}
+      <motion.div className="absolute inset-0 z-0" style={{ scale: videoScale }}>
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="h-full w-full object-cover opacity-50 scale-105"
+          className="h-full w-full object-cover opacity-40 grayscale-[0.2]"
         >
           <source
             src="/vecteezy_freshly-baked-apple-pie-steaming-on-a-rustic-wooden-table-in_71718681.mp4"
             type="video/mp4"
           />
         </video>
-        {/* Warm gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-text-deep via-text-deep/60 to-text-deep/20 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-text-deep/30 via-transparent to-text-deep z-10" />
-      </div>
-
-      {/* ── Ambient Light Blurs — desaturated, not neon (taste §7) ── */}
-      <div className="absolute top-20 right-[10%] w-[400px] h-[400px] bg-primary/8 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-20 left-[5%] w-[300px] h-[300px] bg-accent/6 blur-[120px] rounded-full pointer-events-none" />
-
-      {/* ── Decorative Leaf — replaces rotating text circle ── */}
-      <motion.div
-        className="absolute bottom-16 right-16 z-20 hidden lg:block text-primary/20"
-        style={{ y: y1 }}
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <LeafDecoration className="w-20 h-28" />
+        {/* Deep artisanal overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/70 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A0A0A]/40 to-[#0A0A0A] z-10" />
       </motion.div>
 
-      {/* ── Main Content — LEFT ALIGNED (anti-center bias, DESIGN_VARIANCE 7) ── */}
+      {/* ── Interactive Ambient Light ── */}
+      <motion.div 
+        style={{ x: springX, y: springY }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 blur-[180px] rounded-full pointer-events-none z-10 mix-blend-screen" 
+      />
+
+      {/* ── Main Content ── */}
       <motion.main
-        className="relative z-20 w-full max-w-5xl"
+        className="relative z-20 w-full max-w-6xl mt-12"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="flex flex-col gap-10">
-          {/* Rating Badge — Liquid Glass */}
-          <motion.div variants={itemVariants} className="flex items-center gap-4">
-            <div className="h-[1px] w-10 bg-primary/50" />
-            <div className="px-4 py-2 rounded-full liquid-glass bg-warm-white/5 flex items-center gap-3">
-              <div className="flex -space-x-1.5">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="size-5 rounded-full border-2 border-text-deep/80 bg-primary/20 flex items-center justify-center"
-                  >
-                    <Star className="size-2.5 text-yellow-400 fill-yellow-400" />
-                  </div>
-                ))}
+        <div className="grid lg:grid-cols-[1fr,auto] items-end gap-12 lg:gap-24">
+          <div className="flex flex-col gap-12">
+            {/* Trust Indicator */}
+            <motion.div variants={itemVariants} className="flex items-center gap-4">
+              <div className="px-4 py-2 rounded-full border border-warm-white/10 bg-warm-white/5 backdrop-blur-md flex items-center gap-3">
+                <div className="flex -space-x-1">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star key={i} className="size-2.5 text-primary fill-primary" />
+                  ))}
+                </div>
+                <span className="text-[10px] font-sans font-bold tracking-[0.2em] uppercase text-warm-white/60">
+                  Top Rated Boutique Cafe
+                </span>
               </div>
-              <span className="text-warm-white/60 text-xs font-sans tracking-widest uppercase">
-                4.8 Rating · Alexandra Park
-              </span>
-            </div>
-          </motion.div>
-
-          {/* ── Headline — controlled hierarchy (taste §3 Rule 1, §7) ── */}
-          <div className="relative">
-            <motion.h1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-warm-white leading-[0.9] tracking-tighter"
-              variants={itemVariants}
-            >
-              <motion.span
-                variants={itemVariants}
-                className="block italic font-light text-primary mb-2"
-              >
-                Authentic
-              </motion.span>
-              <motion.span variants={itemVariants} className="block relative">
-                Artisan
-                <span className="absolute -top-2 -right-2 md:-right-8 text-[10px] font-sans font-bold text-warm-white/25 tracking-[0.3em] uppercase hidden md:block">
-                  EST. 2024
-                </span>
-              </motion.span>
-              <motion.span
-                variants={itemVariants}
-                className="block text-primary/80"
-              >
-                Cafe.
-              </motion.span>
-            </motion.h1>
-
-            {/* Decorative vertical text */}
-            <div className="absolute -left-14 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-6 text-warm-white/15">
-              <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] tracking-[0.4em] uppercase font-sans">
-                Homemade with Love
-              </span>
-              <div className="w-[1px] h-16 bg-warm-white/10" />
-            </div>
-          </div>
-
-          {/* ── Description + CTA ── */}
-          <div className="flex flex-col md:flex-row items-start md:items-end gap-10 md:gap-16">
-            <motion.p
-              variants={itemVariants}
-              className="max-w-md text-lg md:text-xl text-warm-white/50 font-sans font-light leading-relaxed prose-width"
-            >
-              A boutique coffee experience nestled in the heart of Alexandra
-              Park. Halal, artisanal, and crafted for the local soul.
-            </motion.p>
-
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center gap-4"
-            >
-              <MagneticButton
-                onClick={() =>
-                  document
-                    .getElementById("menu")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="group relative px-10 py-4 rounded-full overflow-hidden liquid-glass bg-warm-white/5 text-warm-white transition-all duration-300 hover:border-primary/40"
-              >
-                {/* Directional hover fill */}
-                <div className="absolute inset-0 bg-primary/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out rounded-full" />
-
-                <span className="relative z-10 font-sans font-bold tracking-[0.15em] uppercase text-xs flex items-center gap-3">
-                  Today's Menu
-                  <span className="p-1.5 bg-primary rounded-full group-hover:bg-accent transition-colors duration-300">
-                    <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </span>
-                </span>
-              </MagneticButton>
-
-              <MagneticButton
-                onClick={() =>
-                  document
-                    .getElementById("booking")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="px-8 py-4 text-warm-white/50 font-sans font-medium tracking-widest uppercase text-xs hover:text-warm-white transition-colors duration-300 relative group"
-              >
-                <span>Reserve a Spot</span>
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-0 h-px bg-primary group-hover:w-6 transition-all duration-300" />
-              </MagneticButton>
             </motion.div>
+
+            {/* Kinetic Typography Heading */}
+            <div className="relative">
+              <motion.h1
+                className="text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] font-display font-bold text-warm-white leading-[0.85] tracking-tighter"
+                variants={itemVariants}
+              >
+                <motion.span
+                  className="block italic font-light text-primary/90 text-4xl sm:text-6xl md:text-7xl lg:text-8xl mb-4"
+                >
+                  {splitText("Authentic")}
+                </motion.span>
+                <span className="block relative overflow-hidden">
+                  {splitText("Artisan")}
+                  <motion.span 
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 1.2, duration: 1, ease: "circOut" }}
+                    className="absolute -bottom-2 left-0 w-full h-[2px] bg-primary/30 origin-left"
+                  />
+                </span>
+                <span className="block text-warm-white/40">
+                  {splitText("Cafe.")}
+                </span>
+              </motion.h1>
+
+              {/* Vertical Est Tag */}
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1.5 }}
+                className="absolute -right-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-8 text-warm-white/20"
+              >
+                <div className="w-px h-24 bg-gradient-to-b from-transparent via-warm-white/20 to-transparent" />
+                <span className="[writing-mode:vertical-lr] text-[9px] tracking-[0.6em] uppercase font-sans font-black">
+                  Since 2024
+                </span>
+              </motion.div>
+            </div>
+
+            {/* Description + CTA */}
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-16 mt-4">
+              <motion.p
+                variants={itemVariants}
+                className="max-w-md text-base md:text-lg text-warm-white/40 font-sans font-light leading-relaxed tracking-tight"
+              >
+                A boutique sanctuary in Alexandra Park. Handcrafted pastries, artisanal coffee, and a curated atmosphere for the discerning soul.
+              </motion.p>
+
+              <motion.div variants={itemVariants} className="flex items-center gap-6">
+                <MagneticButton
+                  onClick={() => document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })}
+                  className="group relative px-10 py-5 rounded-full bg-primary text-text-deep transition-all duration-500 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                  <span className="relative z-10 font-sans font-black tracking-widest uppercase text-[10px] flex items-center gap-3">
+                    View Menu
+                    <ArrowRight className="size-4" />
+                  </span>
+                </MagneticButton>
+
+                <button
+                  onClick={() => document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" })}
+                  className="group flex flex-col gap-1 items-start text-warm-white/60 hover:text-warm-white transition-colors cursor-pointer"
+                >
+                  <span className="font-sans font-bold tracking-[0.2em] uppercase text-[10px]">Reservations</span>
+                  <div className="w-4 h-[1px] bg-primary group-hover:w-12 transition-all duration-500" />
+                </button>
+              </motion.div>
+            </div>
           </div>
+
+          {/* Side Decoration (Taste §3) */}
+          <motion.div 
+            className="hidden lg:flex flex-col items-center gap-8 text-primary/10"
+            style={{ y: y1 }}
+          >
+            <div className="w-px h-48 bg-gradient-to-t from-primary/20 to-transparent" />
+            <LeafDecoration className="w-16 h-24" />
+          </motion.div>
         </div>
       </motion.main>
 
-      {/* ── Scroll Indicator ── */}
+      {/* ── Bottom Scroll Anchor ── */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 text-warm-white/20"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-4 text-warm-white/20"
         style={{ opacity }}
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
       >
-        <ChevronDown className="size-6" />
+        <div className="w-[1px] h-12 bg-gradient-to-b from-warm-white/20 to-transparent" />
+        <span className="text-[8px] tracking-[0.8em] uppercase font-sans font-bold">Scroll</span>
       </motion.div>
     </div>
   )
