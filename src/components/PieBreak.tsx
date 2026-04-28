@@ -15,7 +15,7 @@ export const PieBreak = () => {
       </div>
 
       <motion.div
-        className="relative z-30 w-80 h-80 md:w-[32rem] md:h-[32rem] -mt-16 md:-mt-32 translate-x-12 md:translate-x-32 pointer-events-none"
+        className="relative z-30 w-80 h-80 md:w-[32rem] md:h-[32rem] -mt-40 md:-mt-10 pointer-events-none"
         style={{ rotate: scrollRotate }}
         animate={{ y: [0, -15, 0] }}
         transition={{
