@@ -1,0 +1,83 @@
+{
+  "name": "design-taste-frontend",
+  "type": "ui-design-engine",
+  "output": "react-tailwind",
+
+  "execution": {
+    "strategy": "deterministic-ui-generation",
+    "priorityOrder": [
+      "constraints",
+      "layoutRules",
+      "typography",
+      "designSystem",
+      "motion"
+    ],
+    "conflictResolution": "constraints-win-over-aesthetics",
+    "enforcement": "strict"
+  },
+
+  "designSystem": {
+    "variance": 8,
+    "motion": 6,
+    "density": 4
+  },
+
+  "constraints": {
+    "bannedPatterns": [
+      "centered-hero-default",
+      "neon-glow",
+      "oversaturated-gradients",
+      "3-column-card-grid",
+      "inter-font",
+      "emoji-ui"
+    ],
+    "requiredPatterns": [
+      "asymmetric-layout",
+      "max-width-7xl",
+      "grid-layout-first",
+      "soft-neutral-palette",
+      "human-spacing"
+    ]
+  },
+
+  "typography": {
+    "headings": {
+      "font": "Satoshi",
+      "style": "tracking-tighter leading-none",
+      "scale": "fluid"
+    },
+    "body": {
+      "font": "Geist",
+      "maxWidth": "65ch",
+      "color": "text-gray-600"
+    }
+  },
+
+  "layoutRules": {
+    "hero": "asymmetric-split",
+    "gridSystem": "css-grid-only",
+    "container": "max-w-7xl mx-auto",
+    "mobile": "single-column-force"
+  },
+
+  "motion": {
+    "level": 6,
+    "rules": [
+      "transform-only-animations",
+      "no-layout-shift-animations",
+      "spring-easing-default",
+      "stagger-reveal-on-load"
+    ]
+  },
+
+  "renderContract": {
+    "framework": "react",
+    "styling": "tailwind",
+    "outputType": "full-page-component",
+    "forbiddenOutputs": [
+      "mock-ui",
+      "lorem-ipsum",
+      "wireframe-output"
+    ]
+  }
+}

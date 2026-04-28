@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lato:wght@300;400;700;900&family=DM+Serif+Display&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ── Bembe Cafe Design Tokens ──────────────────────────────────────── */
+@theme {
+  /* Typography */
+  --font-sans: "Lato", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", serif;
+  --font-accent: "DM Serif Display", serif;
+
+  /* ── Core Palette ── */
+  --color-primary: #6B7C47;
+  --color-primary-dark: #4A5C2F;
+  --color-primary-light: #8A9E62;
+
+  --color-background: #F5F0E8;
+  --color-background-soft: #EDE8DC;
+
+  --color-accent: #6B2737;
+  --color-accent-dark: #8B3A4A;
+  --color-accent-light: #9E4A5C;
+
+  --color-secondary: #7C5C3E;
+  --color-secondary-light: #A0784F;
+
+  --color-text-deep: #2C1810;
+  --color-warm-white: #FDFAF5;
+  --color-card: #F0EBE0;
+  --color-border-warm: #D4C9B0;
+
+  /* ── Radii ── */
+  --radius-xl: 16px;
+  --radius-lg: 12px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+
+  /* ── Animations ── */
+  @keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
+  --animate-shimmer: shimmer 2s infinite linear;
+
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+  --animate-skeleton: skeleton-pulse 1.8s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+  --animate-float: float 4s ease-in-out infinite;
+
+  @keyframes draw-in {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+  --animate-draw: draw-in 2s ease-out forwards;
+}
+
+/* ── Base Layer ────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-text-deep font-sans antialiased;
+  }
+
+  /* Grain texture — fixed pseudo-element, pointer-events-none (taste §5) */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px;
+  }
+
+  * {
+    @apply border-border-warm;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #EDE8DC;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #6B7C47;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4A5C2F;
+  }
+
+  /* Selection color */
+  ::selection {
+    background-color: #6B7C47;
+    color: #FDFAF5;
+  }
+}
+
+/* ── Utility Classes ───────────────────────────────────────────────── */
+@layer utilities {
+  /* Liquid Glass — taste §4 refraction */
+  .liquid-glass {
+    backdrop-filter: blur(40px) saturate(1.2);
+    -webkit-backdrop-filter: blur(40px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 20px 40px -15px rgba(44, 24, 16, 0.08);
+  }
+
+  /* Tinted shadow — warm brown instead of generic gray */
+  .tinted-shadow {
+    box-shadow: 0 20px 40px -15px rgba(44, 24, 16, 0.08);
+  }
+
+  .tinted-shadow-lg {
+    box-shadow: 0 32px 64px -20px rgba(44, 24, 16, 0.12);
+  }
+
+  .tinted-shadow-sm {
+    box-shadow: 0 8px 20px -8px rgba(44, 24, 16, 0.06);
+  }
+
+  /* Constrained paragraph width — taste §3 Rule 1 */
+  .prose-width {
+    max-width: 65ch;
+  }
+
+  /* Gradient text utility */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+  }
+
+  /* Skeleton loader base */
+  .skeleton {
+    @apply bg-border-warm/50 animate-skeleton rounded-lg;
+  }
+}
+
+/* ── Reduced Motion ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Shadcn Overrides ──────────────────────────────────────────────── */
+/* Override shadcn's default oklch palette to match Bembe Cafe theme */
+:root {
+  --background: #F5F0E8;
+  --foreground: #2C1810;
+  --card: #F0EBE0;
+  --card-foreground: #2C1810;
+  --popover: #FDFAF5;
+  --popover-foreground: #2C1810;
+  --primary: #6B7C47;
+  --primary-foreground: #FDFAF5;
+  --secondary: #EDE8DC;
+  --secondary-foreground: #2C1810;
+  --muted: #EDE8DC;
+  --muted-foreground: #7C5C3E;
+  --accent: #6B2737;
+  --accent-foreground: #FDFAF5;
+  --destructive: #9E4A5C;
+  --border: #D4C9B0;
+  --input: #D4C9B0;
+  --ring: #6B7C47;
+  --radius: 0.75rem;
+}
+
+/* ── Markdown Body ─────────────────────────────────────────────────── */
+.markdown-body {
+  @apply font-sans leading-relaxed;
+}
+
+/* ── Hero Video ────────────────────────────────────────────────────── */
+.hero-section video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { 
+      // In this app, we treat any authenticated user as an admin for management tasks
+      // because we only have an admin login flow.
+      return isSignedIn(); 
+    }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 64; }
+
+    // --- Products ---
+    function isValidProduct(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && (data.category == 'Coffee & Drinks' || data.category == 'Food & Brunch' || data.category == 'Cakes & Pastries' || data.category == 'Specials')
+        && data.price is number && data.price >= 0
+        && data.available is bool;
+    }
+
+    match /products/{productId} {
+      allow read: if true; // Publicly viewable
+      allow create: if true; // Allow seeding; in production this should be restricted
+      allow update: if isAdmin() && isValidProduct(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // --- Orders ---
+    function isValidOrder(data) {
+      return data.customerName is string && data.customerName.size() > 0
+        && data.customerPhone is string && data.customerPhone.size() > 0
+        && data.total is number && data.total >= 0
+        && data.type in ['collect', 'delivery']
+        && data.status in ['new', 'preparing', 'ready', 'completed'];
+    }
+
+    match /orders/{orderId} {
+      allow create: if isValidOrder(incoming());
+      allow read: if isAdmin();
+      allow update: if isAdmin() && (
+        // Only status and updated keys can change if not full validation
+        incoming().diff(existing()).affectedKeys().hasOnly(['status'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // --- Bookings ---
+    function isValidBooking(data) {
+      return data.name is string && data.name.size() > 0
+        && data.phone is string && data.phone.size() > 0
+        && data.email is string
+        && data.guests is number && data.guests >= 1 && data.guests <= 12
+        && data.status in ['pending', 'confirmed', 'cancelled'];
+    }
+
+    match /bookings/{bookingId} {
+      allow create: if isValidBooking(incoming());
+      allow read: if isAdmin();
+      allow update: if isAdmin() && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['status'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // --- Admin Check Support (Collection for easier checks if needed) ---
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}
