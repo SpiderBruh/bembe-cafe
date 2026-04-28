@@ -1,10 +1,10 @@
 {
-  "projectId": "gen-lang-client-0466065170",
-  "appId": "1:685806426590:web:f30100eb990f75e280654f",
-  "apiKey": "AIzaSyAqOX6apdi15u5VpegcX4440rkHRITCCt0",
-  "authDomain": "gen-lang-client-0466065170.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-de0b4b2b-b894-41d3-93dc-2128bf478604",
-  "storageBucket": "gen-lang-client-0466065170.firebasestorage.app",
-  "messagingSenderId": "685806426590",
-  "measurementId": ""
+  "apiKey": "AIzaSyAJRXW5WlOhYzM-Lq1dhSEY3fhdYlGo1Q4",
+  "authDomain": "bembe-cafe.firebaseapp.com",
+  "projectId": "bembe-cafe",
+  "storageBucket": "bembe-cafe.firebasestorage.app",
+  "messagingSenderId": "509743816741",
+  "appId": "1:509743816741:web:fe9b15caa121c0b5549fcc",
+  "measurementId": "G-ZK0NDHXTW6",
+  "firestoreDatabaseId": ""
 }
