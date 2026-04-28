@@ -8,6 +8,7 @@ import { seedProducts, Product } from './lib/db-utils';
 // Public Components
 import Hero from './components/ui/hero';
 import { Navbar } from './components/Navbar';
+import { PieBreak } from './components/PieBreak';
 import { TrustMarquee } from './components/TrustMarquee';
 import { CommunityGallery } from './components/CommunityGallery';
 import { AboutStrip } from './components/AboutStrip';
@@ -99,6 +100,9 @@ function MainSite() {
       {/* ── Conversion-Optimized Section Order ── */}
       {/* 1. Hero — first impression */}
       <Hero />
+
+      {/* Pie Break — playful transition */}
+      <PieBreak />
 
       {/* 2. Trust Marquee — immediate social proof */}
       <TrustMarquee />
