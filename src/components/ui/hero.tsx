@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useRef } from "react"
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion"
+import { motion, useScroll, useTransform, useMotionValue, useSpring, Variants } from "framer-motion"
 import { Star, ArrowRight } from "lucide-react"
 
 /* ── Leaf SVG — minimalist line art decoration ── */
@@ -72,6 +72,39 @@ const MagneticButton = ({
   )
 }
 
+/* ── Coffee Dust Particles — controlled playfulness (taste §7) ── */
+const CoffeeDust = ({ mouseX, mouseY }: { mouseX: any, mouseY: any }) => {
+  const particles = Array.from({ length: 12 })
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+      {particles.map((_, i) => {
+        const x = useTransform(mouseX, (v: number) => (v * (0.02 + i * 0.005)) + (i * 100))
+        const y = useTransform(mouseY, (v: number) => (v * (0.02 + i * 0.005)) + (i * 80))
+        return (
+          <motion.div
+            key={i}
+            style={{ x, y }}
+            animate={{ 
+              opacity: [0.1, 0.2, 0.1],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{ 
+              duration: 3 + i, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="absolute size-1 bg-primary/20 rounded-full blur-[1px]"
+            initial={{ 
+              left: `${Math.random() * 100}%`, 
+              top: `${Math.random() * 100}%` 
+            }}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollY } = useScroll()
@@ -81,7 +114,7 @@ export default function Hero() {
   const y1 = useTransform(scrollY, [0, 500], [0, 100])
   const videoScale = useTransform(scrollY, [0, 500], [1.05, 1.2])
 
-  // Mouse tracking for ambient light (Liquid Motion - taste §7)
+  // Mouse tracking for ambient light and dust
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const springX = useSpring(mouseX, { stiffness: 50, damping: 20 })
@@ -99,7 +132,7 @@ export default function Hero() {
   }, [mouseX, mouseY])
 
   /* Stagger animation variants */
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -110,20 +143,20 @@ export default function Hero() {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 80,
         damping: 15,
       },
     },
   }
 
-  const charVariants = {
+  const charVariants: Variants = {
     hidden: { opacity: 0, y: 10 },
     visible: (i: number) => ({
       opacity: 1,
@@ -131,7 +164,7 @@ export default function Hero() {
       transition: {
         delay: 0.5 + i * 0.03,
         duration: 0.8,
-        ease: [0.215, 0.61, 0.355, 1],
+        ease: [0.215, 0.61, 0.355, 1] as [number, number, number, number],
       },
     }),
   }
@@ -154,8 +187,10 @@ export default function Hero() {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-[100dvh] w-full overflow-hidden bg-[#0A0A0A] flex items-center px-6 md:px-12 lg:px-24"
+      className="relative min-h-[100dvh] w-full overflow-hidden bg-[#0A0A0A] flex items-center px-6 md:px-12 lg:px-24 pt-24"
     >
+      <CoffeeDust mouseX={mouseX} mouseY={mouseY} />
+
       {/* ── Video Background with Parallax Scale ── */}
       <motion.div className="absolute inset-0 z-0" style={{ scale: videoScale }}>
         <video
@@ -183,7 +218,7 @@ export default function Hero() {
 
       {/* ── Main Content ── */}
       <motion.main
-        className="relative z-20 w-full max-w-6xl mt-12"
+        className="relative z-20 w-full max-w-6xl py-20"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -220,7 +255,7 @@ export default function Hero() {
                   <motion.span 
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
-                    transition={{ delay: 1.2, duration: 1, ease: "circOut" }}
+                    transition={{ delay: 1.2, duration: 1, ease: "circOut" as const }}
                     className="absolute -bottom-2 left-0 w-full h-[2px] bg-primary/30 origin-left"
                   />
                 </span>
@@ -279,6 +314,15 @@ export default function Hero() {
           <motion.div 
             className="hidden lg:flex flex-col items-center gap-8 text-primary/10"
             style={{ y: y1 }}
+            animate={{ 
+              rotate: [0, 5, 0, -5, 0],
+              y: [0, -10, 0]
+            }}
+            transition={{ 
+              duration: 10, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
           >
             <div className="w-px h-48 bg-gradient-to-t from-primary/20 to-transparent" />
             <LeafDecoration className="w-16 h-24" />
