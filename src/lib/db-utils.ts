@@ -57,11 +57,24 @@ export interface Booking {
 export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'status'>) => {
   try {
     const ordersRef = collection(db, 'orders');
-    return await addDoc(ordersRef, {
+    const result = await addDoc(ordersRef, {
       ...orderData,
       status: 'pending',
       createdAt: serverTimestamp()
     });
+
+    // Trigger email notification via Vercel API
+    try {
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'order', ...orderData })
+      });
+    } catch (e) {
+      console.error("Failed to trigger order email:", e);
+    }
+
+    return result;
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, 'orders');
   }
@@ -71,11 +84,24 @@ export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 's
 export const createBooking = async (bookingData: Omit<Booking, 'id' | 'createdAt' | 'status'>) => {
   try {
     const bookingsRef = collection(db, 'bookings');
-    return await addDoc(bookingsRef, {
+    const result = await addDoc(bookingsRef, {
       ...bookingData,
       status: 'pending',
       createdAt: serverTimestamp()
     });
+
+    // Trigger email notification via Vercel API
+    try {
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'booking', ...bookingData })
+      });
+    } catch (e) {
+      console.error("Failed to trigger booking email:", e);
+    }
+
+    return result;
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, 'bookings');
   }

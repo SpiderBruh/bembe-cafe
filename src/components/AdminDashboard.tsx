@@ -158,7 +158,7 @@ export const AdminDashboard = () => {
                       {orders.slice(0, 5).map(order => (
                         <div key={order.id} className="p-8 flex justify-between items-center bg-white hover:bg-[#FDFCFB] transition-colors group">
                           <div className="flex gap-6 items-center">
-                            <div className={`size-14 rounded-2xl flex items-center justify-center font-bold text-xs tracking-tighter ${order.status === 'new' ? 'bg-primary text-warm-white animate-pulse' : 'bg-[#FDFCFB] text-text-deep/30'}`}>
+                            <div className={`size-14 rounded-2xl flex items-center justify-center font-bold text-xs tracking-tighter ${order.status === 'new' ? 'bg-primary text-warm-white' : 'bg-[#FDFCFB] text-text-deep/30'}`}>
                               {order.status === 'new' ? 'NEW' : '...'}
                             </div>
                             <div>
@@ -209,6 +209,7 @@ export const AdminDashboard = () => {
 const ProductModal = ({ product, onClose }: { product: Product | null, onClose: () => void }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Product>>(
     product || {
       name: '',
@@ -228,13 +229,16 @@ const ProductModal = ({ product, onClose }: { product: Product | null, onClose: 
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setImageUploadError(null); // Clear previous errors
     setIsUploading(true);
     try {
       const storageRef = ref(storage, `pastries/${Date.now()}-${file.name}`);
       const snapshot = await uploadBytes(storageRef, file);
       const url = await getDownloadURL(snapshot.ref);
       setFormData(prev => ({ ...prev, imageUrl: url }));
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Image upload error:", error); // Log for debugging
+      setImageUploadError(error.message || 'Failed to upload image.');
       handleFirestoreError(error, OperationType.WRITE, 'storage');
     } finally {
       setIsUploading(false);
@@ -272,16 +276,16 @@ const ProductModal = ({ product, onClose }: { product: Product | null, onClose: 
       <motion.div 
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose}
-        className="absolute inset-0 bg-text-deep/60 backdrop-blur-md"
+        className="absolute inset-0 bg-text-deep/40"
       />
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl relative z-10 overflow-hidden flex flex-col md:flex-row"
+        className="bg-card rounded-3xl shadow-lg w-full max-w-2xl relative z-10 overflow-hidden flex flex-col md:flex-row"
       >
         {/* Left: Image Selection */}
-        <div className="md:w-1/2 bg-background-soft p-10 flex flex-col items-center justify-center border-r border-border-warm/50">
+        <div className="md:w-1/2 bg-background-soft p-10 flex flex-col items-center justify-center">
           <div className="relative w-full aspect-square bg-white rounded-2xl border-2 border-dashed border-border-warm overflow-hidden flex flex-col items-center justify-center group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
             {isUploading ? (
               <Loader2 className="animate-spin text-primary size-10" />
@@ -295,6 +299,9 @@ const ProductModal = ({ product, onClose }: { product: Product | null, onClose: 
             )}
             <input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
           </div>
+          {imageUploadError && (
+            <p className="text-red-500 text-xs mt-2">{imageUploadError}</p>
+          )}
           <p className="text-[10px] text-text-deep/20 mt-4 text-center leading-relaxed">Artisan standard: Use high-quality, desaturated, or natural lighting photography.</p>
         </div>
 
@@ -393,7 +400,7 @@ const OrdersTab = ({ orders }: { orders: any[] }) => {
     <div className="grid grid-cols-1 gap-8">
       {orders.map(order => (
         <div key={order.id} className="bg-white p-10 rounded-3xl border border-border-warm shadow-sm relative overflow-hidden flex flex-col lg:flex-row gap-10">
-          <div className={`absolute top-0 left-0 w-2 h-full ${order.status === 'new' ? 'bg-primary' : 'bg-border-warm/30'}`} />
+          <div className={`absolute top-0 left-0 w-1 h-full ${order.status === 'new' ? 'bg-primary/50' : 'bg-border-warm/30'}`} />
           
           <div className="flex-1">
             <header className="flex items-center gap-6 mb-8">
@@ -590,7 +597,7 @@ const InventoryTab = ({ products, onEdit }: { products: Product[], onEdit: (p: P
 const SidebarLink = ({ active, onClick, icon, label }: any) => (
   <button 
     onClick={onClick}
-    className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-bold text-xs uppercase tracking-[0.2em] ${active ? 'bg-primary text-warm-white shadow-lg' : 'text-warm-white/30 hover:bg-white/5 hover:text-warm-white'}`}
+    className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-bold text-xs uppercase tracking-[0.2em] ${active ? 'bg-primary text-warm-white' : 'text-warm-white/30 hover:bg-white/5 hover:text-warm-white'}`}
   >
     {icon}
     <span>{label}</span>
@@ -598,7 +605,7 @@ const SidebarLink = ({ active, onClick, icon, label }: any) => (
 );
 
 const StatCard = ({ icon, label, value }: any) => (
-  <div className="bg-white p-10 rounded-[2.5rem] border border-border-warm shadow-sm flex flex-col gap-6 relative overflow-hidden group">
+  <div className="bg-white p-10 rounded-3xl border border-border-warm shadow-sm flex flex-col gap-6 relative overflow-hidden group">
     <div className="absolute top-0 right-0 p-8 text-text-deep/5 opacity-0 group-hover:opacity-100 transition-opacity">
        {icon}
     </div>
