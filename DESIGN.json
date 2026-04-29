@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-29T12:00:00Z",
+  "title": "Design System: Bembe Cafe",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Deep Olive Green",
+        "canonical": "#6B7C47",
+        "tonalRamp": [
+          "oklch(15% 0.122 133.5)",
+          "oklch(25% 0.122 133.5)",
+          "oklch(35% 0.122 133.5)",
+          "oklch(45% 0.122 133.5)",
+          "oklch(56.7% 0.122 133.5)",
+          "oklch(65% 0.122 133.5)",
+          "oklch(75% 0.122 133.5)",
+          "oklch(85% 0.122 133.5)"
+        ]
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "Dark Forest Green",
+        "canonical": "#4A5C2F"
+      },
+      "primary-light": {
+        "role": "primary",
+        "displayName": "Soft Moss Green",
+        "canonical": "#8A9E62"
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Warm Beige Background",
+        "canonical": "#F5F0E8",
+        "tonalRamp": [
+          "oklch(15% 0.021 82.5)",
+          "oklch(25% 0.021 82.5)",
+          "oklch(35% 0.021 82.5)",
+          "oklch(45% 0.021 82.5)",
+          "oklch(60% 0.021 82.5)",
+          "oklch(75% 0.021 82.5)",
+          "oklch(85% 0.021 82.5)",
+          "oklch(96.3% 0.021 82.5)"
+        ]
+      },
+      "background-soft": {
+        "role": "neutral",
+        "displayName": "Soft Cream Background",
+        "canonical": "#EDE8DC"
+      },
+      "accent": {
+        "role": "accent",
+        "displayName": "Rich Maroon",
+        "canonical": "#6B2737",
+        "tonalRamp": [
+          "oklch(15% 0.126 18.2)",
+          "oklch(25% 0.126 18.2)",
+          "oklch(33.1% 0.126 18.2)",
+          "oklch(45% 0.126 18.2)",
+          "oklch(60% 0.126 18.2)",
+          "oklch(75% 0.126 18.2)",
+          "oklch(85% 0.126 18.2)",
+          "oklch(95% 0.126 18.2)"
+        ]
+      },
+      "accent-dark": {
+        "role": "accent",
+        "displayName": "Darker Berry Red",
+        "canonical": "#8B3A4A"
+      },
+      "accent-light": {
+        "role": "accent",
+        "displayName": "Soft Rose Red",
+        "canonical": "#9E4A5C"
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Earthy Brown",
+        "canonical": "#7C5C3E"
+      },
+      "secondary-light": {
+        "role": "secondary",
+        "displayName": "Light Tan",
+        "canonical": "#A0784F"
+      },
+      "text-deep": {
+        "role": "neutral",
+        "displayName": "Deep Text Brown",
+        "canonical": "#2C1810"
+      },
+      "warm-white": {
+        "role": "neutral",
+        "displayName": "Warm White Popover",
+        "canonical": "#FDFAF5"
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Creamy Card",
+        "canonical": "#F0EBE0"
+      },
+      "border-warm": {
+        "role": "neutral",
+        "displayName": "Warm Border Tone",
+        "canonical": "#D4C9B0"
+      },
+      "ring": {
+        "role": "primary",
+        "displayName": "Focus Ring Color",
+        "canonical": "#6B7C47"
+      }
+    },
+    "typographyMeta": {
+      "sans": {
+        "displayName": "Body Sans-serif",
+        "purpose": "General body text, clear and highly readable."
+      },
+      "display": {
+        "displayName": "Display Serif",
+        "purpose": "Hero headlines and major page titles, for impact and heritage."
+      },
+      "accent": {
+        "displayName": "Accent Serif",
+        "purpose": "Special callouts and decorative elements."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tinted-shadow-sm",
+        "value": "0 8px 20px -8px rgba(44, 24, 16, 0.06)",
+        "purpose": "Subtle lift on smaller interactive elements or cards at rest."
+      },
+      {
+        "name": "tinted-shadow",
+        "value": "0 20px 40px -15px rgba(44, 24, 16, 0.08)",
+        "purpose": "Default elevation for cards, sections, and slightly more prominent elements."
+      },
+      {
+        "name": "tinted-shadow-lg",
+        "value": "0 32px 64px -20px rgba(44, 24, 16, 0.12)",
+        "purpose": "Significant elevation on hover states, modals, or focused interactive components."
+      },
+      {
+        "name": "liquid-glass",
+        "value": "backdrop-filter: blur(40px) saturate(1.2); -webkit-backdrop-filter: blur(40px) saturate(1.2); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 20px 40px -15px rgba(44, 24, 16, 0.08);",
+        "purpose": "Frosted, translucent elements that need to stand out while allowing background content to subtly show through."
+      }
+    ],
+    "motion": [
+      {
+        "name": "shimmer",
+        "value": "shimmer 2s infinite linear",
+        "purpose": "Loading state animation, creating a horizontal highlight effect.",
+        "keyframes": "@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }"
+      },
+      {
+        "name": "skeleton-pulse",
+        "value": "skeleton-pulse 1.8s ease-in-out infinite",
+        "purpose": "Skeleton loading animation, pulsing opacity for placeholder content.",
+        "keyframes": "@keyframes skeleton-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }"
+      },
+      {
+        "name": "float",
+        "value": "float 4s ease-in-out infinite",
+        "purpose": "Subtle vertical floating animation for decorative elements.",
+        "keyframes": "@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }"
+      },
+      {
+        "name": "draw-in",
+        "value": "draw-in 2s ease-out forwards",
+        "purpose": "SVG path drawing animation.",
+        "keyframes": "@keyframes draw-in { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }"
+      },
+      {
+        "name": "magnetic-button-spring",
+        "value": "stiffness: 150, damping: 15",
+        "purpose": "Spring animation parameters for the magnetic button effect on mouse movement."
+      },
+      {
+        "name": "tap-scale",
+        "value": "scale: 0.98",
+        "purpose": "Scale down effect on button tap for tactile feedback."
+      },
+      {
+        "name": "ease-out-transition",
+        "value": "transition-transform duration-500 ease-out",
+        "purpose": "Common transition for elements sliding into view or changing state."
+      },
+      {
+        "name": "spring-entrance",
+        "value": "type: "spring", stiffness: 60, damping: 20",
+        "purpose": "Entrance animation for elements, providing a natural, bouncy feel."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "Small screens, typically phones."
+      },
+      {
+        "name": "md",
+        "value": "768px",
+        "purpose": "Medium screens, typically tablets."
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "Large screens, typically desktops."
+      },
+      {
+        "name": "xl",
+        "value": "1280px",
+        "purpose": "Extra large screens, larger desktops."
+      },
+      {
+        "name": "2xl",
+        "value": "1536px",
+        "purpose": "2x extra large screens."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "Standard primary action button with a warm olive green background.",
+      "html": "<button class="ds-btn-primary">Click Me</button>",
+      "css": ".ds-btn-primary { 
+  display: inline-flex;
+  shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem; /* rounded-lg */
+  border: 1px solid transparent;
+  background-color: #6B7C47; /* bg-primary */
+  color: #FDFAF5; /* text-primary-foreground */
+  padding: 0.625rem 1rem; /* px-2.5, h-8 -> roughly */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  user-select: none;
+}
+.ds-btn-primary:hover { 
+  background-color: rgba(107, 124, 71, 0.8); /* hover:bg-primary/80 */
+}
+.ds-btn-primary:focus-visible {
+  border-color: #6B7C47; /* focus-visible:border-ring */
+  box-shadow: 0 0 0 3px rgba(107, 124, 71, 0.5); /* focus-visible:ring-3 focus-visible:ring-ring/50 */
+}
+.ds-btn-primary:active {
+  transform: translateY(1px); /* active:not-aria-[haspopup]:translate-y-px */
+}
+.ds-btn-primary:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.ds-btn-primary[aria-invalid='true'] {
+  border-color: #9E4A5C; /* aria-invalid:border-destructive */
+  box-shadow: 0 0 0 3px rgba(158, 74, 92, 0.2); /* aria-invalid:ring-3 aria-invalid:ring-destructive/20 */
+}"
+    },
+    {
+      "name": "Magnetic Hero Button",
+      "kind": "button",
+      "refersTo": "hero-magnetic-button",
+      "description": "An interactive button with a magnetic hover effect and animated background for the hero section.",
+      "html": "<button class="ds-magnetic-btn">
+  <div class="ds-magnetic-btn-bg"></div>
+  <span class="ds-magnetic-btn-text">Explore <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+</button>",
+      "css": ".ds-magnetic-btn {
+  position: relative;
+  padding: 1.25rem 2.5rem; /* px-10 py-5 */
+  border-radius: 9999px; /* rounded-full */
+  background-color: #6B7C47; /* bg-primary */
+  color: #2C1810; /* text-text-deep */
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Framer motion styles are JS-driven, not pure CSS */
+}
+.ds-magnetic-btn-bg {
+  position: absolute;
+  inset: 0;
+  background-color: #6B2737; /* bg-accent */
+  transform: translateY(100%);
+  transition: transform 500ms ease-out;
+}
+.ds-magnetic-btn:hover .ds-magnetic-btn-bg {
+  transform: translateY(0%);
+}
+.ds-magnetic-btn-text {
+  position: relative;
+  z-index: 10;
+  font-family: 'Lato', ui-sans-serif, system-ui, sans-serif; /* font-sans */
+  font-weight: 900; /* font-black */
+  letter-spacing: 0.1em; /* tracking-widest */
+  text-transform: uppercase;
+  font-size: 0.625rem; /* text-[10px] */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ds-magnetic-btn-text svg {
+  width: 0.75rem;
+  height: 0.75rem; /* size-3 */
+  flex-shrink: 0;
+}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Warm Hearth Cafe",
+    "overview": "Bembe Cafe's design system is built on editorial warmth — the feeling of a well-loved neighborhood cafe that happens to be beautifully designed, where every visual choice feels intentional but never cold or corporate. The mood is the visual equivalent of wrapping your hands around a hot coffee cup on a rainy Manchester morning inside a park pavilion surrounded by people you recognize — comfortable, genuine, and quietly special. Every design decision must reject the transactional sterility of delivery platforms, the intimidating minimalism of concept coffee brands, and the soulless uniformity of template-built sites, in favor of bold earthy typography, warm beige and olive tones, and layouts that feel handcrafted for this specific community in this specific park. The primary emotion evoked is warmth, followed by trust (especially for halal-conscious users and first-time visitors), and delight from beautiful food photography and charming copy. The tone is warm, conversational, community-first, quietly confident, and proud of being local, halal, and homemade.",
+    "keyCharacteristics": [
+      "Authentic and inviting aesthetic that fosters a sense of belonging.",
+      "Purposeful warmth conveyed through color, typography, and visual depth.",
+      "Rejection of generic, transactional, or overly corporate design patterns.",
+      "Design that emphasizes the cafe's community roots and handmade quality.",
+      "Strategic use of visual elements to create appetite and trust.",
+      "Copy that feels like a message from a friend, not a brand manager."
+    ],
+    "rules": [
+      {
+        "name": "The Halal Palette Rule",
+        "body": "The palette is exclusively warm beige, olive green, and maroon, avoiding cold blues, stark whites, or harsh blacks anywhere in the design to reinforce the cafe's warmth and commitment to halal offerings.",
+        "section": "colors"
+      },
+      {
+        "name": "The Editorial Warmth Rule",
+        "body": "Typography choices should prioritize readability and a warm, inviting tone. Headings use classic serif fonts to convey heritage and craft, while body text uses a clean, approachable sans-serif.",
+        "section": "typography"
+      },
+      {
+        "name": "The Natural Light Rule",
+        "body": "Shadows should always be warm-tinted (using rgba(44, 24, 16, X)) to mimic natural light, never cold grey. They are reserved for signaling interaction or separation, not for decorative flourish.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do prioritize readability and comfort in all textual content.",
+      "Do use authentic, high-quality photography that feels specific to Bembe Cafe and Alexandra Park.",
+      "Do ensure generous and consistent spacing to create a calm and inviting visual rhythm.",
+      "Do use warm-tinted shadows and subtle background layering to convey depth.",
+      "Do ensure interactive elements provide clear, warm, and trustworthy feedback on hover and focus.",
+      "Do use copy that feels warm, conversational, and from a friend, such as: 'Every cup is made with care, just the way you like it.'",
+      "Do explicitly confirm halal status with language like: 'Everything on our menu is halal — always, no exceptions.'"
+    ],
+    "donts": [
+      "Don't make the site look like a generic food delivery platform (Uber Eats, Deliveroo) – avoid transactional, cluttered, or soul-less designs.",
+      "Don't adopt the loud, aggressive, or impulse-optimized aesthetic of fast-food chain websites (McDonald's, KFC).",
+      "Don't mimic corporate hotel restaurant websites with cold, overly formal, stiff photography, or zero personality.",
+      "Don't use template-built Wix or Squarespace cafe site aesthetics (default blocks, system fonts, generic colors).",
+      "Don't resemble dark, moody specialty coffee brands that are cold, unwelcoming, or intimidating. Bembe is not a concept cafe for coffee snobs.",
+      "Don't use purple gradients, glassmorphism effects, neon accents, or any design trend that feels techy, digital, or artificial.",
+      "Don't use stock photography of generic smiling models in cafes.",
+      "Don't have an overwhelming homepage with too many popups, cookie banners blocking content, newsletter modals appearing immediately, or autoplay videos with sound.",
+      "Don't use cold blues, stark whites, or harsh blacks anywhere in the design.",
+      "Don't make the site feel like it was built from a template; every section should feel custom-designed."
+    ]
+  }
+}

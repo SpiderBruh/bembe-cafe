@@ -65,12 +65,12 @@ export const Footer = () => {
             </h4>
             <ul className="space-y-2 text-warm-white/55 text-sm">
               <li className="flex justify-between gap-4">
-                <span>Mon</span>
-                <span className="text-accent font-bold">Closed</span>
+                <span>Mon - Fri</span>
+                <span>10 AM - 4:30 PM</span>
               </li>
               <li className="flex justify-between gap-4">
-                <span>Tue - Sun</span>
-                <span>10 AM - 5 PM</span>
+                <span>Sat - Sun</span>
+                <span>9 AM - 5 PM</span>
               </li>
             </ul>
           </div>
@@ -93,12 +93,12 @@ export const Footer = () => {
               </li>
               <li>
                 <a href="#about" className="hover:text-primary transition-colors duration-200 cursor-pointer">
-                  About Us
+                  Our Story
                 </a>
               </li>
               <li>
                 <a href="#reviews" className="hover:text-primary transition-colors duration-200 cursor-pointer">
-                  Reviews
+                  What People Say
                 </a>
               </li>
             </ul>

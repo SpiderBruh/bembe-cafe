@@ -49,9 +49,9 @@ export const AboutStrip = () => {
   ];
 
   const counters = [
-    { value: 2400, suffix: '+', label: 'Coffees Served' },
-    { value: 43, suffix: '', label: 'Google Reviews' },
-    { value: 48, suffix: '/5', label: 'Star Rating' },
+    { value: 2400, suffix: '+', label: 'Coffees Served with Love' },
+    { value: 43, suffix: '+', label: 'Voices of Joy' },
+    { value: 48, suffix: '/5', label: 'Our Community\'s Rating' },
   ];
 
   /* Stagger variants (taste §4) */
@@ -194,10 +194,10 @@ export const AboutStrip = () => {
                       Opening Hours
                     </h4>
                     <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm text-text-deep/60">
-                      <span>Mon</span>
-                      <span className="text-accent font-medium">Closed</span>
-                      <span>Tue - Sun</span>
-                      <span>10:00 AM - 5:00 PM</span>
+                      <span>Mon - Fri</span>
+                      <span>10:00 AM - 4:30 PM</span>
+                      <span>Sat - Sun</span>
+                      <span>9:00 AM - 5:00 PM</span>
                     </div>
                   </div>
                 </div>

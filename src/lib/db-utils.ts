@@ -22,6 +22,7 @@ export interface Product {
   allergens: string;
   createdAt: any;
   order: number;
+  kidFriendly?: boolean; // Added for kid-friendly filtering
 }
 
 export interface Order {
@@ -136,7 +137,8 @@ export const seedProducts = async () => {
       imageUrl: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&q=80&w=800",
       available: true,
       allergens: "None",
-      order: 4
+      order: 4,
+      kidFriendly: true
     },
     {
       name: "Bembe Breakfast",
@@ -186,7 +188,8 @@ export const seedProducts = async () => {
       imageUrl: "https://images.unsplash.com/photo-1607478902797-28521035547b?auto=format&fit=crop&q=80&w=800",
       available: true,
       allergens: "Gluten",
-      order: 9
+      order: 9,
+      kidFriendly: true
     },
     {
       name: "Croissant",
@@ -196,7 +199,8 @@ export const seedProducts = async () => {
       imageUrl: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=800",
       available: true,
       allergens: "Gluten, Milk",
-      order: 10
+      order: 10,
+      kidFriendly: true
     }
   ];
 

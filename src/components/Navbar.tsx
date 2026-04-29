@@ -13,10 +13,10 @@ export const Navbar = ({ cartCount, onCartClick }: { cartCount: number, onCartCl
   }, []);
 
   const navLinks = [
-    { name: 'Menu', href: '#menu' },
-    { name: 'Book', href: '#booking' },
-    { name: 'About', href: '#about' },
-    { name: 'Reviews', href: '#reviews' },
+    { name: 'Our Menu', href: '#menu' },
+    { name: 'Book a Table', href: '#booking' },
+    { name: 'Our Story', href: '#about' },
+    { name: 'What People Say', href: '#reviews' },
   ];
 
   /* Stagger variants for mobile menu (taste §4) */
@@ -195,13 +195,13 @@ export const Navbar = ({ cartCount, onCartClick }: { cartCount: number, onCartCl
                   href="#"
                   className="text-warm-white/40 hover:text-primary text-xs uppercase tracking-widest font-bold cursor-pointer transition-colors duration-200"
                 >
-                  Instagram
+                  Join us on Instagram
                 </a>
                 <a
                   href="#"
                   className="text-warm-white/40 hover:text-primary text-xs uppercase tracking-widest font-bold cursor-pointer transition-colors duration-200"
                 >
-                  Facebook
+                  Connect on Facebook
                 </a>
               </div>
             </div>

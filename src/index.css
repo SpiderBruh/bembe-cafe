@@ -40,7 +40,7 @@
     from { transform: translateX(-100%); }
     to { transform: translateX(100%); }
   }
-  --animate-shimmer: shimmer 2s infinite linear;
+  --animate-shimmer: shimmer 1.8s infinite cubic-bezier(0.25, 1, 0.5, 1);
 
   @keyframes skeleton-pulse {
     0%, 100% { opacity: 0.4; }
@@ -52,7 +52,7 @@
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-8px); }
   }
-  --animate-float: float 4s ease-in-out infinite;
+  --animate-float: float 3.5s ease-in-out infinite;
 
   @keyframes draw-in {
     from { stroke-dashoffset: 1; }

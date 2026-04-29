@@ -9,11 +9,41 @@ export const StickyCTA = () => {
   /* Check if cafe is currently open */
   const getOpenStatus = () => {
     const now = new Date();
-    const day = now.getDay(); // 0=Sun, 1=Mon
-    const hour = now.getHours();
-    if (day === 1) return { open: false, text: 'Closed Today' };
-    if (hour >= 10 && hour < 17) return { open: true, text: 'Open Now' };
-    return { open: false, text: 'Opens 10 AM' };
+    // Use Intl.DateTimeFormat to get the time in Manchester/UK (Europe/London)
+    const formatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London',
+      hour: 'numeric',
+      minute: 'numeric',
+      weekday: 'long',
+      hour12: false
+    });
+    
+    const parts = formatter.formatToParts(now);
+    const getPart = (type: string) => parts.find(p => p.type === type)?.value;
+    
+    const hour = parseInt(getPart('hour') || '0');
+    const minute = parseInt(getPart('minute') || '0');
+    const day = getPart('weekday') || '';
+    
+    const currentTimeMinutes = hour * 60 + minute;
+    
+    const isWeekend = day === 'Saturday' || day === 'Sunday';
+    const openTimeMinutes = isWeekend ? 9 * 60 : 10 * 60; // 9:00 or 10:00
+    const closeTimeMinutes = isWeekend ? 17 * 60 : 16 * 60 + 30; // 5:00 PM or 4:30 PM
+    
+    if (currentTimeMinutes >= openTimeMinutes && currentTimeMinutes < closeTimeMinutes) {
+      return { open: true, text: 'Open Now' };
+    }
+    
+    // Determine the next opening time
+    if (currentTimeMinutes < openTimeMinutes) {
+      return { open: false, text: `Opens ${isWeekend ? '9' : '10'} AM` };
+    }
+    
+    // If it's after closing, check if tomorrow is a weekend
+    // (This is a simplification, but effective for the user experience)
+    const tomorrowIsWeekend = day === 'Friday' || day === 'Saturday';
+    return { open: false, text: `Opens ${tomorrowIsWeekend ? '9' : '10'} AM` };
   };
 
   const status = getOpenStatus();

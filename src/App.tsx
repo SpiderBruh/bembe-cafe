@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { auth, db } from './lib/firebase';
 import { seedProducts, Product } from './lib/db-utils';
+import { motion } from 'framer-motion';
 
 // Public Components
 import Hero from './components/ui/hero';
@@ -24,7 +25,12 @@ import { AdminDashboard } from './components/AdminDashboard';
 
 function SocialWidgets() {
   return (
-    <div className="fixed bottom-20 md:bottom-24 right-4 md:right-8 z-40 flex flex-col gap-3 items-end">
+    <motion.div
+      initial={{ opacity: 0, x: 50, y: 50 }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20, delay: 1.5 }}
+      className="fixed bottom-20 md:bottom-24 right-4 md:right-8 z-40 flex flex-col gap-3 items-end"
+    >
       {/* Facebook Messenger */}
       <a
         href="https://www.facebook.com/messages/t/514122318457122"
@@ -61,7 +67,7 @@ function SocialWidgets() {
           WhatsApp
         </div>
       </a>
-    </div>
+    </motion.div>
   );
 }
 
@@ -72,7 +78,14 @@ function LoadingScreen() {
       <div className="w-48 h-1 rounded-full overflow-hidden bg-border-warm/30">
         <div className="h-full w-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent animate-shimmer" />
       </div>
-      <h2 className="font-display text-xl italic text-primary/60">Bembe Cafe</h2>
+      <motion.h2
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
+        className="font-display text-xl italic text-primary/60"
+      >
+        Bembe Cafe
+      </motion.h2>
     </div>
   );
 }

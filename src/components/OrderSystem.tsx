@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Plus, Minus, X, Trash2, Clock, Truck, Store, ArrowRight, Heart, Star } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, X, Trash2, Clock, Truck, Store, ArrowRight, Heart, Star, CircleCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product, createOrder } from '@/lib/db-utils';
 
@@ -33,12 +33,13 @@ export const OrderSystem = ({
   const [street, setStreet] = useState('');
   const [notes, setNotes] = useState('');
 
-  const categories = ['All', 'Coffee & Drinks', 'Food & Brunch', 'Cakes & Pastries', 'Specials'];
+  const categories = ['All', 'Coffee & Drinks', 'Food & Brunch', 'Cakes & Pastries', 'Specials', 'Kid-Friendly'];
   
-  const filteredProducts = activeCategory === 'All' 
-    ? products 
-    : products.filter(p => p.category === activeCategory);
-
+  const filteredProducts = activeCategory === 'All'
+    ? products
+    : activeCategory === 'Kid-Friendly'
+      ? products.filter(p => p.kidFriendly)
+      : products.filter(p => p.category === activeCategory);
   const addToCart = (product: Product) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
@@ -152,6 +153,18 @@ export const OrderSystem = ({
             Freshly prepared, halal ingredients, and coffee crafted with boutique precision.
           </motion.p>
         </div>
+
+        {/* Halal Trust Signal */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.2 }}
+          className="flex items-center justify-center gap-3 bg-primary/5 text-primary rounded-full px-6 py-3 mb-10 text-sm font-sans font-medium tracking-wide"
+        >
+          <CircleCheck className="size-4 shrink-0" />
+          <span>Everything on Our Menu is 100% Halal Certified</span>
+        </motion.div>
 
         {/* Category Pills — rounded, layoutId shared transition */}
         <div className="flex flex-wrap gap-3 mb-14">
@@ -295,7 +308,7 @@ export const OrderSystem = ({
                     <div className="size-20 rounded-full bg-primary/5 flex items-center justify-center mb-5">
                       <ShoppingCart className="size-8 text-primary/20" />
                     </div>
-                    <p className="text-text-deep/35 font-sans tracking-widest uppercase text-xs mb-6">The basket is empty</p>
+                    <p className="text-text-deep/35 font-sans tracking-widest uppercase text-xs mb-6">Your basket is feeling a little empty...</p>
                     <Button onClick={() => setIsCartOpen(false)} className="bg-primary text-warm-white rounded-full px-8 py-5 font-bold tracking-widest uppercase text-xs cursor-pointer">
                       Explore Selection
                     </Button>
@@ -356,7 +369,7 @@ export const OrderSystem = ({
                       </div>
                       {orderType === 'collect' ? (
                         <div className="space-y-1.5">
-                          <label htmlFor="cart-time" className="text-[10px] font-bold uppercase tracking-widest text-primary font-sans">Collection Time</label>
+                          <label htmlFor="cart-time" className="text-[10px] font-bold uppercase tracking-widest text-primary font-sans">Ready for collection by:</label>
                           <input id="cart-time" type="time" className="w-full bg-transparent border-b border-border-warm py-2 font-sans text-sm tracking-wide focus:border-primary outline-none transition-colors" value={pickupTime} onChange={(e) => setPickupTime(e.target.value)} />
                         </div>
                       ) : (
@@ -391,7 +404,7 @@ export const OrderSystem = ({
                     onClick={handlePlaceOrder}
                     className="w-full bg-primary hover:bg-primary-dark text-warm-white rounded-full py-6 font-sans font-bold tracking-[0.2em] uppercase text-xs transition-all duration-200 tinted-shadow cursor-pointer active:scale-[0.98]"
                   >
-                    {isOrdering ? 'Processing...' : 'Confirm Order'}
+                    {isOrdering ? 'Processing...' : 'Ready to savor?'}
                   </Button>
                   <p className="text-[10px] text-center text-text-deep/25 font-sans tracking-widest uppercase">
                     By confirming, you agree to our artisan standards.
@@ -427,7 +440,7 @@ export const OrderSystem = ({
                 <span className="block font-display font-bold text-primary mt-4 text-xl tracking-tight italic">Order ID: #{orderSuccess}</span>
               </p>
               <Button onClick={() => setOrderSuccess(null)} className="w-full bg-primary text-warm-white rounded-full py-5 font-bold tracking-widest uppercase text-xs cursor-pointer">
-                Splendid
+                Back to delightful treats!
               </Button>
             </motion.div>
           </div>
