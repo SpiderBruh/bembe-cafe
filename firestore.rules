@@ -39,7 +39,7 @@ service cloud.firestore {
         && data.customerPhone is string && data.customerPhone.size() > 0
         && data.total is number && data.total >= 0
         && data.type in ['collect', 'delivery']
-        && data.status in ['new', 'preparing', 'ready', 'completed'];
+        && data.status in ['pending', 'new', 'preparing', 'ready', 'completed'];
     }
 
     match /orders/{orderId} {

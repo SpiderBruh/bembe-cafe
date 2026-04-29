@@ -94,15 +94,15 @@ export const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] flex">
+    <div className="h-screen bg-[#FDFCFB] flex overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#1A1A1A] text-warm-white sticky top-0 h-screen flex flex-col p-6 shadow-2xl z-50">
+      <aside className="w-64 bg-[#1A1A1A] text-warm-white flex flex-col p-6 shadow-2xl z-50 shrink-0">
         <div className="mb-12 px-2">
           <h2 className="font-display text-2xl font-bold italic text-primary">Bembe Admin</h2>
           <p className="text-[10px] uppercase tracking-[0.3em] text-warm-white/30 font-sans font-black mt-1">Management Suite</p>
         </div>
 
-        <nav className="flex-1 space-y-2">
+        <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar">
           <SidebarLink active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} icon={<LayoutDashboard size={20} />} label="Overview" />
           <SidebarLink active={activeTab === 'orders'} onClick={() => setActiveTab('orders')} icon={<ShoppingBag size={20} />} label="Orders" />
           <SidebarLink active={activeTab === 'bookings'} onClick={() => setActiveTab('bookings')} icon={<CalendarCheck size={20} />} label="Bookings" />
@@ -118,28 +118,32 @@ export const AdminDashboard = () => {
               console.error("Logout failed:", err);
             }
           }}
-          className="mt-auto flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 text-warm-white/60 transition-all font-bold text-xs uppercase tracking-widest"
+          className="mt-6 flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 text-warm-white/60 transition-all font-bold text-xs uppercase tracking-widest border border-white/5"
         >
           <LogOut size={16} /> Logout & Exit
         </button>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 p-10 overflow-y-auto">
-        <div className="max-w-6xl mx-auto">
-          <header className="mb-12 flex justify-between items-end border-b border-border-warm/30 pb-8">
-            <div>
-              <h1 className="text-4xl font-display font-bold italic capitalize text-text-deep tracking-tight">{activeTab}</h1>
-              <p className="text-text-deep/40 text-sm mt-1">Artisan operations management.</p>
-            </div>
-            <div className="flex gap-4">
-               {activeTab === 'inventory' && (
-                 <Button onClick={() => { setEditingProduct(null); setIsProductModalOpen(true); }} className="bg-primary hover:bg-primary-dark text-warm-white rounded-full px-6 py-5 font-bold tracking-widest uppercase text-[10px] tinted-shadow">
-                   <Plus className="mr-2 size-3" /> New Product
-                 </Button>
-               )}
-            </div>
-          </header>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col relative overflow-hidden">
+        {/* Fixed Header */}
+        <header className="px-10 py-8 flex justify-between items-end border-b border-border-warm/30 bg-white/80 backdrop-blur-md z-40">
+          <div>
+            <h1 className="text-4xl font-display font-bold italic capitalize text-text-deep tracking-tight">{activeTab}</h1>
+            <p className="text-text-deep/40 text-sm mt-1">Artisan operations management.</p>
+          </div>
+          <div className="flex gap-4">
+             {activeTab === 'inventory' && (
+               <Button onClick={() => { setEditingProduct(null); setIsProductModalOpen(true); }} className="bg-primary hover:bg-primary-dark text-warm-white rounded-full px-6 py-5 font-bold tracking-widest uppercase text-[10px] tinted-shadow">
+                 <Plus className="mr-2 size-3" /> New Product
+               </Button>
+             )}
+          </div>
+        </header>
+
+        {/* Scrollable Content Zone */}
+        <main className="flex-1 p-10 overflow-y-auto custom-scrollbar">
+          <div className="max-w-6xl mx-auto">
 
           <AnimatePresence mode="wait">
             <motion.div
@@ -482,51 +486,53 @@ const BookingsTab = ({ bookings }: { bookings: any[] }) => {
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-border-warm shadow-sm overflow-hidden">
-      <table className="w-full text-left">
-        <thead className="bg-background-soft">
-          <tr>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Schedule</th>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Guest Details</th>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-center">Party Size</th>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Status</th>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border-warm/50">
-          {bookings.map(b => (
-            <tr key={b.id} className="hover:bg-[#FDFCFB]/50 transition-colors">
-              <td className="p-8">
-                <p className="font-bold text-text-deep">{b.date}</p>
-                <div className="flex items-center gap-2 text-text-deep/40 mt-1">
-                  <Clock size={12} />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">{b.time}</span>
-                </div>
-              </td>
-              <td className="p-8">
-                <p className="font-bold text-text-deep">{b.name}</p>
-                <p className="text-xs text-text-deep/40 mt-1 font-sans">{b.phone}</p>
-              </td>
-              <td className="p-8 text-center">
-                <span className="bg-[#FDFCFB] px-4 py-1.5 rounded-xl border border-border-warm font-bold text-sm text-primary">
-                  {b.guests}
-                </span>
-              </td>
-              <td className="p-8">
-                <span className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-widest ${getStatusStyle(b.status)}`}>
-                  {b.status.toUpperCase()}
-                </span>
-              </td>
-              <td className="p-8 text-right">
-                <div className="flex gap-2 justify-end">
-                  <button onClick={() => updateStatus(b.id, 'confirmed')} className="size-10 flex items-center justify-center bg-green-50 text-green-600 rounded-xl hover:bg-green-600 hover:text-white transition-all"><Check size={18} /></button>
-                  <button onClick={() => updateStatus(b.id, 'cancelled')} className="size-10 flex items-center justify-center bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all"><X size={18} /></button>
-                </div>
-              </td>
+    <div className="bg-white rounded-3xl border border-border-warm shadow-sm overflow-hidden flex flex-col max-h-[600px]">
+      <div className="overflow-y-auto custom-scrollbar">
+        <table className="w-full text-left">
+          <thead className="bg-background-soft sticky top-0 z-10">
+            <tr>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Schedule</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Guest Details</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-center">Party Size</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Status</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-right">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-border-warm/50">
+            {bookings.map(b => (
+              <tr key={b.id} className="hover:bg-[#FDFCFB]/50 transition-colors">
+                <td className="p-8">
+                  <p className="font-bold text-text-deep">{b.date}</p>
+                  <div className="flex items-center gap-2 text-text-deep/40 mt-1">
+                    <Clock size={12} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest">{b.time}</span>
+                  </div>
+                </td>
+                <td className="p-8">
+                  <p className="font-bold text-text-deep">{b.name}</p>
+                  <p className="text-xs text-text-deep/40 mt-1 font-sans">{b.phone}</p>
+                </td>
+                <td className="p-8 text-center">
+                  <span className="bg-[#FDFCFB] px-4 py-1.5 rounded-xl border border-border-warm font-bold text-sm text-primary">
+                    {b.guests}
+                  </span>
+                </td>
+                <td className="p-8">
+                  <span className={`px-3 py-1 rounded-full text-[9px] font-bold tracking-widest ${getStatusStyle(b.status)}`}>
+                    {b.status.toUpperCase()}
+                  </span>
+                </td>
+                <td className="p-8 text-right">
+                  <div className="flex gap-2 justify-end">
+                    <button onClick={() => updateStatus(b.id, 'confirmed')} className="size-10 flex items-center justify-center bg-green-50 text-green-600 rounded-xl hover:bg-green-600 hover:text-white transition-all"><Check size={18} /></button>
+                    <button onClick={() => updateStatus(b.id, 'cancelled')} className="size-10 flex items-center justify-center bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all"><X size={18} /></button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
@@ -550,53 +556,55 @@ const InventoryTab = ({ products, onEdit }: { products: Product[], onEdit: (p: P
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-border-warm shadow-sm overflow-hidden">
-       <table className="w-full text-left">
-        <thead className="bg-background-soft">
-          <tr>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Artisan Selection</th>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Category</th>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Price</th>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Stock Status</th>
-            <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border-warm/50">
-          {products.map(p => (
-            <tr key={p.id} className="hover:bg-[#FDFCFB]/50 transition-colors group">
-              <td className="p-8 flex items-center gap-6">
-                <div className="size-16 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-border-warm/30">
-                  <img src={p.imageUrl} className="size-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                </div>
-                <div>
-                  <p className="font-bold text-text-deep text-lg">{p.name}</p>
-                  <p className="text-[10px] text-text-deep/30 font-sans mt-1 uppercase tracking-widest">{p.allergens || 'No Allergens'}</p>
-                </div>
-              </td>
-              <td className="p-8">
-                <span className="text-[9px] font-bold uppercase tracking-widest text-primary bg-primary/5 border border-primary/10 px-3 py-1 rounded-full">
-                  {p.category}
-                </span>
-              </td>
-              <td className="p-8 font-bold font-display italic text-lg text-text-deep">£{p.price.toFixed(2)}</td>
-              <td className="p-8">
-                <button 
-                  onClick={() => toggleAvailable(p.id!, p.available)}
-                  className={`px-4 py-1.5 rounded-full text-[9px] font-bold tracking-widest transition-all ${p.available ? 'bg-green-50 text-green-600 border border-green-200' : 'bg-red-50 text-red-600 border border-red-200'}`}
-                >
-                  {p.available ? 'IN STOCK' : 'OUT OF STOCK'}
-                </button>
-              </td>
-              <td className="p-8 text-right">
-                <div className="flex gap-2 justify-end">
-                  <button onClick={() => onEdit(p)} className="size-10 flex items-center justify-center bg-[#FDFCFB] text-text-deep/40 rounded-xl border border-border-warm/50 hover:bg-primary hover:text-white hover:border-primary transition-all"><Edit2 size={16} /></button>
-                  <button onClick={() => deleteProduct(p.id!)} className="size-10 flex items-center justify-center bg-[#FDFCFB] text-red-300 rounded-xl border border-border-warm/50 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all"><Trash2 size={16} /></button>
-                </div>
-              </td>
+    <div className="bg-white rounded-3xl border border-border-warm shadow-sm overflow-hidden flex flex-col max-h-[600px]">
+      <div className="overflow-y-auto custom-scrollbar">
+        <table className="w-full text-left">
+          <thead className="bg-background-soft sticky top-0 z-10">
+            <tr>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Artisan Selection</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Category</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Price</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Stock Status</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-right">Actions</th>
             </tr>
-          ))}
-        </tbody>
-       </table>
+          </thead>
+          <tbody className="divide-y divide-border-warm/50">
+            {products.map(p => (
+              <tr key={p.id} className="hover:bg-[#FDFCFB]/50 transition-colors group">
+                <td className="p-8 flex items-center gap-6">
+                  <div className="size-16 rounded-2xl overflow-hidden shadow-sm shrink-0 border border-border-warm/30">
+                    <img src={p.imageUrl} className="size-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-text-deep text-lg">{p.name}</p>
+                    <p className="text-[10px] text-text-deep/30 font-sans mt-1 uppercase tracking-widest">{p.allergens || 'No Allergens'}</p>
+                  </div>
+                </td>
+                <td className="p-8">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-primary bg-primary/5 border border-primary/10 px-3 py-1 rounded-full">
+                    {p.category}
+                  </span>
+                </td>
+                <td className="p-8 font-bold font-display italic text-lg text-text-deep">£{p.price.toFixed(2)}</td>
+                <td className="p-8">
+                  <button 
+                    onClick={() => toggleAvailable(p.id!, p.available)}
+                    className={`px-4 py-1.5 rounded-full text-[9px] font-bold tracking-widest transition-all border ${p.available ? 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100' : 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100'}`}
+                  >
+                    {p.available ? 'IN STOCK' : 'OUT OF STOCK'}
+                  </button>
+                </td>
+                <td className="p-8 text-right">
+                  <div className="flex gap-2 justify-end">
+                    <button onClick={() => onEdit(p)} className="size-10 flex items-center justify-center bg-[#FDFCFB] text-text-deep/40 rounded-xl border border-border-warm/50 hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm"><Edit2 size={16} /></button>
+                    <button onClick={() => deleteProduct(p.id!)} className="size-10 flex items-center justify-center bg-[#FDFCFB] text-red-300 rounded-xl border border-border-warm/50 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all shadow-sm"><Trash2 size={16} /></button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
