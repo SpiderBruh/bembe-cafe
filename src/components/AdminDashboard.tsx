@@ -10,8 +10,7 @@ import {
   addDoc,
   serverTimestamp 
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage, auth, handleFirestoreError, OperationType } from '@/lib/firebase';
+import { db, auth, handleFirestoreError, OperationType } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -242,17 +241,24 @@ const ProductModal = ({ product, onClose }: { product: Product | null, onClose: 
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setImageUploadError(null); // Clear previous errors
+    setImageUploadError(null);
     setIsUploading(true);
     try {
-      const storageRef = ref(storage, `pastries/${Date.now()}-${file.name}`);
-      const snapshot = await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(snapshot.ref);
-      setFormData(prev => ({ ...prev, imageUrl: url }));
+      // artisan upload to vercel blob
+      const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
+        method: 'POST',
+        body: file,
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      const blob = await response.json();
+      setFormData(prev => ({ ...prev, imageUrl: blob.url }));
     } catch (error: any) {
-      console.error("Image upload error:", error); // Log for debugging
-      setImageUploadError(error.message || 'Failed to upload image.');
-      handleFirestoreError(error, OperationType.WRITE, 'storage');
+      console.error("Vercel Blob upload error:", error);
+      setImageUploadError(error.message || 'Failed to upload image to Vercel.');
     } finally {
       setIsUploading(false);
     }
