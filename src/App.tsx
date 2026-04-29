@@ -22,6 +22,7 @@ import { StickyCTA } from './components/StickyCTA';
 // Admin Components
 import { AdminLogin } from './components/AdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
+import { SmoothScroll } from './components/SmoothScroll';
 
 function SocialWidgets() {
   return (
@@ -107,47 +108,49 @@ function MainSite() {
   const cartCount = cart.reduce((acc, item) => acc + item.qty, 0);
 
   return (
-    <div className="min-h-[100dvh] bg-background">
-      <Navbar cartCount={cartCount} onCartClick={() => setIsCartOpen(true)} />
+    <SmoothScroll>
+      <div className="min-h-[100dvh] bg-background">
+        <Navbar cartCount={cartCount} onCartClick={() => setIsCartOpen(true)} />
 
-      {/* ── Conversion-Optimized Section Order ── */}
-      {/* 1. Hero — first impression */}
-      <Hero />
+        {/* ── Conversion-Optimized Section Order ── */}
+        {/* 1. Hero — first impression */}
+        <Hero />
 
-      {/* Pie Break — playful transition */}
-      <PieBreak />
+        {/* Pie Break — playful transition */}
+        <PieBreak />
 
-      {/* 2. Trust Marquee — immediate social proof */}
-      <TrustMarquee />
+        {/* 2. Trust Marquee — immediate social proof */}
+        <TrustMarquee />
 
-      {/* 3. Gallery — emotional hook ("I want to be there") */}
-      <CommunityGallery />
+        {/* 3. Gallery — emotional hook ("I want to be there") */}
+        <CommunityGallery />
 
-      {/* 4. About — builds connection + context */}
-      <AboutStrip />
+        {/* 4. About — builds connection + context */}
+        <AboutStrip />
 
-      {/* 5. Menu — they're primed and ready to browse */}
-      <OrderSystem
-        products={products}
-        cart={cart}
-        setCart={setCart}
-        isCartOpen={isCartOpen}
-        setIsCartOpen={setIsCartOpen}
-      />
+        {/* 5. Menu — they're primed and ready to browse */}
+        <OrderSystem
+          products={products}
+          cart={cart}
+          setCart={setCart}
+          isCartOpen={isCartOpen}
+          setIsCartOpen={setIsCartOpen}
+        />
 
-      {/* 6. Reviews — social proof reinforces menu decision */}
-      <ReviewsSection />
+        {/* 6. Reviews — social proof reinforces menu decision */}
+        <ReviewsSection />
 
-      {/* 7. Booking — CTA at peak intent */}
-      <BookingSection />
+        {/* 7. Booking — CTA at peak intent */}
+        <BookingSection />
 
-      {/* 8. Footer */}
-      <Footer />
+        {/* 8. Footer */}
+        <Footer />
 
-      {/* Floating elements */}
-      <StickyCTA />
-      <SocialWidgets />
-    </div>
+        {/* Floating elements */}
+        <StickyCTA />
+        <SocialWidgets />
+      </div>
+    </SmoothScroll>
   );
 }
 

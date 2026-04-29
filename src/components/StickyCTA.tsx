@@ -78,7 +78,7 @@ export const StickyCTA = () => {
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="md:hidden fixed bottom-0 left-0 right-0 z-50 p-3 bg-warm-white/95 backdrop-blur-xl border-t border-border-warm tinted-shadow-lg"
           >
             <div className="flex items-center justify-between gap-3 max-w-7xl mx-auto">
@@ -110,7 +110,7 @@ export const StickyCTA = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="hidden md:flex fixed bottom-8 right-8 z-50 items-center gap-3 bg-text-deep text-warm-white rounded-full px-5 py-3 tinted-shadow-lg cursor-pointer group"
             onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })}
           >
