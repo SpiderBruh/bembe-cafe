@@ -101,46 +101,53 @@ export const ProductShowcase = () => {
 const ShowcaseCard = ({ product }: { product: Product }) => {
   return (
     <motion.div 
-      className="min-w-[320px] md:min-w-[450px] aspect-[4/5] relative group overflow-hidden rounded-[2.5rem] bg-white shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] border border-slate-200/50"
-      whileHover={{ y: -10 }}
+      className="min-w-[280px] md:min-w-[400px] aspect-[4/5] relative group flex items-center justify-center"
+      whileHover={{ y: -20 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
     >
-      {/* Product Image */}
-      <img 
-        src={product.imageUrl} 
-        alt={product.name}
-        className="absolute inset-0 w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
-      />
+      {/* Product Image - Floating (No background) */}
+      <div className="relative w-full h-[85%] overflow-hidden rounded-[3rem] transition-transform duration-700 ease-out group-hover:scale-105">
+        <img 
+          src={product.imageUrl} 
+          alt={product.name}
+          className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
+        />
+        
+        {/* Subtle Inner Glow for Depth */}
+        <div className="absolute inset-0 rounded-[3rem] ring-1 ring-inset ring-white/20 shadow-[inset_0_0_80px_rgba(0,0,0,0.1)]" />
+      </div>
       
-      {/* Scrim */}
-      <div className="absolute inset-0 bg-gradient-to-t from-text-deep/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-
-      {/* Liquid Glass Content (Creative Arsenal: §4) */}
-      <div className="absolute bottom-8 left-8 right-8 p-6 liquid-glass rounded-3xl border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md">
-        <div className="flex justify-between items-end">
-          <div>
-            <span className="text-[8px] font-bold uppercase tracking-[0.3em] text-warm-white/40 mb-2 block">
-              {product.category}
-            </span>
-            <h3 className="text-2xl font-display font-bold italic text-warm-white tracking-tight leading-none mb-1">
+      {/* Floating Label (Minimal Glassmorphism) */}
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[85%] p-4 liquid-glass rounded-2xl border border-white/20 backdrop-blur-xl z-20"
+      >
+        <div className="flex justify-between items-center gap-4">
+          <div className="min-w-0">
+            <h3 className="text-lg md:text-xl font-display font-bold italic text-text-deep tracking-tight truncate">
               {product.name}
             </h3>
-            <p className="text-[10px] font-bold text-primary italic">£{product.price.toFixed(2)}</p>
+            <div className="flex items-center gap-2">
+              <span className="text-[8px] font-bold uppercase tracking-widest text-primary italic">£{product.price.toFixed(2)}</span>
+              <span className="text-[8px] font-bold uppercase tracking-widest text-text-deep/20">•</span>
+              <span className="text-[8px] font-bold uppercase tracking-widest text-text-deep/30">{product.category}</span>
+            </div>
           </div>
           
           <motion.button
-            whileTap={{ scale: 0.95 }}
-            className="size-10 rounded-full bg-warm-white text-text-deep flex items-center justify-center hover:bg-primary hover:text-warm-white transition-colors duration-300"
+            whileTap={{ scale: 0.9 }}
+            className="size-8 rounded-full bg-primary text-warm-white flex items-center justify-center hover:bg-accent transition-colors"
           >
-            <Plus className="size-4" />
+            <Plus className="size-3" />
           </motion.button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Magnetic Label (Creative Arsenal: §4) */}
-      <div className="absolute top-8 right-8">
-        <div className="size-12 rounded-full bg-accent/90 text-warm-white flex items-center justify-center text-[8px] font-black uppercase tracking-tighter backdrop-blur-sm scale-0 group-hover:scale-100 transition-transform duration-500 delay-100">
-          Must Try
+      {/* Floating Badge */}
+      <div className="absolute top-4 right-4 z-30">
+        <div className="bg-primary/90 text-warm-white px-3 py-1 rounded-full text-[7px] font-bold uppercase tracking-[0.2em] backdrop-blur-sm shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+          Artisan Selection
         </div>
       </div>
     </motion.div>
