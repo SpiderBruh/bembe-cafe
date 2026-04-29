@@ -1,27 +1,26 @@
 import { put } from '@vercel/blob';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-export const config = {
-  runtime: 'edge',
-};
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-export default async function handler(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const filename = searchParams.get('filename');
+  const { filename } = req.query;
 
-  if (!filename || !request.body) {
-    return new Response('Filename and body are required', { status: 400 });
+  if (!filename) {
+    return res.status(400).json({ error: 'Filename is required' });
   }
 
   try {
-    const blob = await put(filename, request.body, {
+    // Vercel handles the body stream for us
+    const blob = await put(filename as string, req, {
       access: 'public',
     });
 
-    return new Response(JSON.stringify(blob), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return res.status(200).json(blob);
   } catch (error: any) {
-    return new Response(error.message, { status: 500 });
+    console.error("Vercel Blob Error:", error);
+    return res.status(500).json({ error: error.message });
   }
 }
