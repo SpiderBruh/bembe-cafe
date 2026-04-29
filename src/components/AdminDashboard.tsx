@@ -110,7 +110,14 @@ export const AdminDashboard = () => {
         </nav>
 
         <button 
-          onClick={() => signOut(auth)}
+          onClick={async () => {
+            try {
+              await signOut(auth);
+              window.location.href = '/';
+            } catch (err) {
+              console.error("Logout failed:", err);
+            }
+          }}
           className="mt-auto flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 text-warm-white/60 transition-all font-bold text-xs uppercase tracking-widest"
         >
           <LogOut size={16} /> Logout & Exit
