@@ -12,10 +12,10 @@ const PANELS = [
   },
   {
     id: 2,
-    title: "Boutique",
-    tagline: "Crafted Daily",
-    images: { left: "/c2.png", center: "/c1.png", right: "/c3.png" }, // Re-ordered for variety
-    accent: "Experience"
+    title: "Velvet",
+    tagline: "Specialty Pour",
+    images: { left: "/latte1.png", center: "/latte1.png", right: "/latte1.png" },
+    accent: "Latte"
   }
 ];
 
