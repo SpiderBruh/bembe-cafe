@@ -19,6 +19,7 @@ import { ReviewsSection } from './components/ReviewsSection';
 import { BookingSection } from './components/BookingSection';
 import { Footer } from './components/Footer';
 import { StickyCTA } from './components/StickyCTA';
+import { ProductShowcase } from './components/ProductShowcase';
 
 // Admin Components
 import { AdminLogin } from './components/AdminLogin';
@@ -116,6 +117,9 @@ function MainSite() {
         {/* ── Conversion-Optimized Section Order ── */}
         {/* 1. Hero — first impression */}
         <Hero />
+
+        {/* Product Showcase — cinematic experience */}
+        <ProductShowcase />
 
         {/* Pie Break — playful transition */}
         <PieBreak />

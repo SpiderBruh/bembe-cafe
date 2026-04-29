@@ -108,7 +108,18 @@ export const createBooking = async (bookingData: Omit<Booking, 'id' | 'createdAt
   }
 };
 
-/* ── Inventory Management ── */
+export const getProducts = async () => {
+  try {
+    const productsRef = collection(db, 'products');
+    const q = query(productsRef, orderBy('order', 'asc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Product[];
+  } catch (error) {
+    handleFirestoreError(error, OperationType.READ, 'products');
+    return [];
+  }
+};
+
 export const updateProductAvailability = async (productId: string, available: boolean) => {
   try {
     // Note: requires updateDoc, adding it to imports if needed

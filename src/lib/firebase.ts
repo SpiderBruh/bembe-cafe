@@ -32,6 +32,7 @@ export enum OperationType {
   DELETE = 'delete',
   LIST = 'list',
   GET = 'get',
+  READ = 'read',
   WRITE = 'write',
 }
 
