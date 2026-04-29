@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { auth, db } from './lib/firebase';
@@ -172,6 +173,7 @@ export default function App() {
 
   return (
     <Router>
+      <Analytics />
       <Routes>
         <Route path="/" element={<MainSite />} />
         <Route path="/admin" element={user ? <AdminDashboard /> : <Navigate to="/admin/login" />} />
