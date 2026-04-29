@@ -37,56 +37,57 @@ export const ProductShowcase = () => {
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-16 lg:items-start">
-          
-          {/* Left: Sticky Branding (Design Variance: 8) */}
-          <div className="lg:w-1/3 lg:sticky lg:top-32">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary mb-6 block">
-                Seasonal Selections
-              </span>
-              <h2 className="text-5xl md:text-7xl font-display font-bold italic text-text-deep leading-[0.9] tracking-tighter mb-8">
-                Artisan<br />
-                <span className="text-primary/20">Collection</span>
-              </h2>
-              <p className="text-text-deep/50 font-sans text-sm leading-relaxed max-w-sm mb-12">
-                Every creation is a dialogue between tradition and innovation. Hand-crafted daily in our Manchester boutique.
-              </p>
-              
-              <div className="flex items-center gap-6 group cursor-pointer">
-                <div className="size-12 rounded-full border border-primary/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-500">
-                  <ArrowRight className="size-5 text-primary group-hover:text-warm-white -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-deep/40 group-hover:text-text-deep transition-colors">
-                  Explore Full Menu
-                </span>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right: Kinetic Carousel (Motion Intensity: 6) */}
-          <div className="lg:w-2/3 flex flex-col gap-12">
-            <div className="relative overflow-hidden cursor-grab active:cursor-grabbing">
-              <motion.div 
-                className="flex gap-8"
-                style={{ x }}
+            
+            {/* Left: Sticky Branding (Design Variance: 8) */}
+            <div className="lg:w-1/3 lg:sticky lg:top-32">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
-                {products.map((product, idx) => (
-                  <ShowcaseCard key={product.id || idx} product={product} />
-                ))}
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary mb-6 block">
+                  Seasonal Selections
+                </span>
+                <h2 className="text-5xl md:text-7xl font-display font-bold italic text-text-deep leading-[0.9] tracking-tighter mb-8">
+                  Artisan<br />
+                  <span className="text-primary/20">Collection</span>
+                </h2>
+                <p className="text-text-deep/50 font-sans text-sm leading-relaxed max-w-sm mb-12">
+                  Every creation is a dialogue between tradition and innovation. Hand-crafted daily in our Manchester boutique.
+                </p>
+                
+                <div className="flex items-center gap-6 group cursor-pointer">
+                  <div className="size-12 rounded-full border border-primary/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-500">
+                    <ArrowRight className="size-5 text-primary group-hover:text-warm-white -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-deep/40 group-hover:text-text-deep transition-colors">
+                    Explore Full Menu
+                  </span>
+                </div>
               </motion.div>
             </div>
-            
-            {/* Progress Indicator */}
-            <div className="h-[1px] w-full bg-border-warm/30 relative">
-              <motion.div 
-                className="absolute top-0 left-0 h-full bg-primary"
-                style={{ scaleX: scrollYProgress, transformOrigin: "0%" }}
-              />
+
+            {/* Right: Kinetic Carousel (Motion Intensity: 6) */}
+            <div className="lg:w-2/3 flex flex-col gap-12">
+              <div className="relative overflow-hidden cursor-grab active:cursor-grabbing">
+                <motion.div 
+                  className="flex gap-8"
+                  style={{ x }}
+                >
+                  {products.map((product, idx) => (
+                    <ShowcaseCard key={product.id || idx} product={product} />
+                  ))}
+                </motion.div>
+              </div>
+              
+              {/* Progress Indicator */}
+              <div className="h-[1px] w-full bg-border-warm/30 relative">
+                <motion.div 
+                  className="absolute top-0 left-0 h-full bg-primary"
+                  style={{ scaleX: scrollYProgress, transformOrigin: "0%" }}
+                />
+              </div>
             </div>
           </div>
         )}
