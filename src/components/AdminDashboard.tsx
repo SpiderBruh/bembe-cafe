@@ -11,7 +11,8 @@ import {
   serverTimestamp 
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage, handleFirestoreError, OperationType } from '@/lib/firebase';
+import { db, storage, auth, handleFirestoreError, OperationType } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, 
@@ -109,10 +110,10 @@ export const AdminDashboard = () => {
         </nav>
 
         <button 
-          onClick={() => window.location.href = '/'}
+          onClick={() => signOut(auth)}
           className="mt-auto flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 text-warm-white/60 transition-all font-bold text-xs uppercase tracking-widest"
         >
-          <LogOut size={16} /> Exit to Site
+          <LogOut size={16} /> Logout & Exit
         </button>
       </aside>
 
