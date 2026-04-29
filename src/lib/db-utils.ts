@@ -19,10 +19,11 @@ export interface Product {
   price: number;
   imageUrl: string;
   available: boolean;
+  stock: number;
   allergens: string;
   createdAt: any;
   order: number;
-  kidFriendly?: boolean; // Added for kid-friendly filtering
+  kidFriendly?: boolean;
 }
 
 export interface Order {

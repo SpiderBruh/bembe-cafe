@@ -230,6 +230,7 @@ const ProductModal = ({ product, onClose }: { product: Product | null, onClose: 
       price: 0,
       imageUrl: '',
       available: true,
+      stock: 10,
       allergens: '',
       order: 0
     }
@@ -370,15 +371,27 @@ const ProductModal = ({ product, onClose }: { product: Product | null, onClose: 
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-text-deep/40">Allergens</label>
-              <input 
-                type="text" 
-                placeholder="e.g. Nuts, Milk, Gluten"
-                className="w-full bg-background-soft border-b border-border-warm py-2 focus:border-primary outline-none transition-colors text-sm"
-                value={formData.allergens}
-                onChange={e => setFormData({...formData, allergens: e.target.value})}
-              />
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-text-deep/40">Initial Stock</label>
+                <input 
+                  required 
+                  type="number" 
+                  className="w-full bg-background-soft border-b border-border-warm py-2 focus:border-primary outline-none transition-colors text-sm"
+                  value={formData.stock}
+                  onChange={e => setFormData({...formData, stock: parseInt(e.target.value)})}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-text-deep/40">Allergens</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Nuts"
+                  className="w-full bg-background-soft border-b border-border-warm py-2 focus:border-primary outline-none transition-colors text-sm"
+                  value={formData.allergens}
+                  onChange={e => setFormData({...formData, allergens: e.target.value})}
+                />
+              </div>
             </div>
 
             <div className="space-y-1.5">
@@ -562,16 +575,30 @@ const InventoryTab = ({ products, onEdit }: { products: Product[], onEdit: (p: P
     }
   };
 
+  const updateStock = async (id: string, delta: number) => {
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+    const newStock = Math.max(0, (product.stock || 0) + delta);
+    try {
+      await updateDoc(doc(db, 'products', id), { 
+        stock: newStock,
+        available: newStock > 0
+      });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.UPDATE, 'products');
+    }
+  };
+
   return (
-    <div className="bg-white rounded-3xl border border-border-warm shadow-sm overflow-hidden flex flex-col max-h-[600px]">
+    <div className="bg-white rounded-3xl border border-border-warm shadow-sm overflow-hidden flex flex-col max-h-[700px]">
       <div className="overflow-y-auto custom-scrollbar">
         <table className="w-full text-left">
-          <thead className="bg-background-soft sticky top-0 z-10">
+          <thead className="bg-background-soft sticky top-0 z-10 shadow-sm">
             <tr>
               <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Artisan Selection</th>
               <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Category</th>
-              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Price</th>
-              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans">Stock Status</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-center">Unit Price</th>
+              <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-center">In Stock</th>
               <th className="p-8 font-bold uppercase text-[9px] tracking-[0.3em] text-text-deep/40 font-sans text-right">Actions</th>
             </tr>
           </thead>
@@ -592,14 +619,28 @@ const InventoryTab = ({ products, onEdit }: { products: Product[], onEdit: (p: P
                     {p.category}
                   </span>
                 </td>
-                <td className="p-8 font-bold font-display italic text-lg text-text-deep">£{p.price.toFixed(2)}</td>
+                <td className="p-8 font-bold font-display italic text-lg text-text-deep text-center">£{p.price.toFixed(2)}</td>
                 <td className="p-8">
-                  <button 
-                    onClick={() => toggleAvailable(p.id!, p.available)}
-                    className={`px-4 py-1.5 rounded-full text-[9px] font-bold tracking-widest transition-all border ${p.available ? 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100' : 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100'}`}
-                  >
-                    {p.available ? 'IN STOCK' : 'OUT OF STOCK'}
-                  </button>
+                  <div className="flex items-center justify-center gap-4">
+                    <button 
+                      onClick={() => updateStock(p.id!, -1)}
+                      className="size-8 flex items-center justify-center rounded-lg bg-background-soft border border-border-warm text-text-deep/40 hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all font-bold"
+                    >
+                      -
+                    </button>
+                    <div className="flex flex-col items-center min-w-[60px]">
+                      <span className={`text-xl font-display font-bold italic ${p.stock <= 5 ? 'text-accent' : 'text-text-deep'}`}>
+                        {p.stock || 0}
+                      </span>
+                      <span className="text-[8px] font-bold uppercase tracking-widest text-text-deep/20">Units</span>
+                    </div>
+                    <button 
+                      onClick={() => updateStock(p.id!, 1)}
+                      className="size-8 flex items-center justify-center rounded-lg bg-background-soft border border-border-warm text-text-deep/40 hover:bg-green-50 hover:text-green-600 hover:border-green-100 transition-all font-bold"
+                    >
+                      +
+                    </button>
+                  </div>
                 </td>
                 <td className="p-8 text-right">
                   <div className="flex gap-2 justify-end">

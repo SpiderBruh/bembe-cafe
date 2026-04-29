@@ -23,6 +23,7 @@ service cloud.firestore {
       return data.name is string && data.name.size() > 0 && data.name.size() <= 100
         && (data.category == 'Coffee & Drinks' || data.category == 'Food & Brunch' || data.category == 'Cakes & Pastries' || data.category == 'Specials')
         && data.price is number && data.price >= 0
+        && data.stock is number && data.stock >= 0
         && data.available is bool;
     }
 
