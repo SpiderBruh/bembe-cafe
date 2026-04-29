@@ -1,3 +1,16 @@
+import { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { motion } from 'framer-motion';
+import { Lock, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+export const AdminLogin = ({ onLogin }: { onLogin: () => void }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -108,3 +121,4 @@
       </motion.div>
     </div>
   );
+};
