@@ -213,6 +213,7 @@ export const AdminDashboard = () => {
           />
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 };
