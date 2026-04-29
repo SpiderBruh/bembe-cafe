@@ -1,156 +1,105 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { getProducts, Product } from '@/lib/db-utils';
-import { ArrowRight, ShoppingBag, Plus } from 'lucide-react';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export const ProductShowcase = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   const { scrollYProgress } = useScroll({
-    target: scrollRef,
+    target: containerRef,
     offset: ["start end", "end start"]
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], [0, -400]);
-
-  useEffect(() => {
-    getProducts().then(data => {
-      setProducts(data.filter(p => p.available));
-      setLoading(false);
-    });
-  }, []);
+  // Parallax offsets for depth layering
+  const yC1 = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+  const yC2 = useTransform(scrollYProgress, [0, 1], [30, -30]);
+  const yC3 = useTransform(scrollYProgress, [0, 1], [0, 0]); // Center stays stable but floats
 
   return (
-    <section ref={scrollRef} className="relative py-32 overflow-hidden bg-[#FDFCFB]">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-        {loading ? (
-          <div className="h-[60vh] flex items-center justify-center">
-            <motion.div 
-              animate={{ opacity: [0.4, 0.7, 0.4] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30"
-            >
-              Loading Artisan Collection
-            </motion.div>
-          </div>
-        ) : (
-          <div className="flex flex-col lg:flex-row gap-16 lg:items-start">
-            
-            {/* Left: Sticky Branding (Design Variance: 8) */}
-            <div className="lg:w-1/3 lg:sticky lg:top-32">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary mb-6 block">
-                  Seasonal Selections
-                </span>
-                <h2 className="text-5xl md:text-7xl font-display font-bold italic text-text-deep leading-[0.9] tracking-tighter mb-8">
-                  Artisan<br />
-                  <span className="text-primary/20">Collection</span>
-                </h2>
-                <p className="text-text-deep/50 font-sans text-sm leading-relaxed max-w-sm mb-12">
-                  Every creation is a dialogue between tradition and innovation. Hand-crafted daily in our Manchester boutique.
-                </p>
-                
-                <div className="flex items-center gap-6 group cursor-pointer">
-                  <div className="size-12 rounded-full border border-primary/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-500">
-                    <ArrowRight className="size-5 text-primary group-hover:text-warm-white -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-deep/40 group-hover:text-text-deep transition-colors">
-                    Explore Full Menu
-                  </span>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Right: Kinetic Carousel (Motion Intensity: 6) */}
-            <div className="lg:w-2/3 flex flex-col gap-12">
-              <div className="relative overflow-hidden cursor-grab active:cursor-grabbing">
-                <motion.div 
-                  className="flex gap-8"
-                  style={{ x }}
-                >
-                  {products.map((product, idx) => (
-                    <ShowcaseCard key={product.id || idx} product={product} />
-                  ))}
-                </motion.div>
-              </div>
-              
-              {/* Progress Indicator */}
-              <div className="h-[1px] w-full bg-border-warm/30 relative">
-                <motion.div 
-                  className="absolute top-0 left-0 h-full bg-primary"
-                  style={{ scaleX: scrollYProgress, transformOrigin: "0%" }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Decorative grain/noise (Performance Guardrail: §5) */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03] grain-overlay" />
-    </section>
-  );
-};
-
-const ShowcaseCard = ({ product }: { product: Product }) => {
-  return (
-    <motion.div 
-      className="min-w-[280px] md:min-w-[400px] aspect-[4/5] relative group flex items-center justify-center"
-      whileHover={{ y: -20 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-    >
-      {/* Product Image - Floating (No background) */}
-      <div className="relative w-full h-[85%] overflow-hidden rounded-[3rem] transition-transform duration-700 ease-out group-hover:scale-105">
-        <img 
-          src={product.imageUrl} 
-          alt={product.name}
-          className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
-        />
+    <section ref={containerRef} className="relative py-48 md:py-64 overflow-visible bg-[#FDFCFB]">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative h-[500px] md:h-[700px] flex items-center justify-center">
         
-        {/* Subtle Inner Glow for Depth */}
-        <div className="absolute inset-0 rounded-[3rem] ring-1 ring-inset ring-white/20 shadow-[inset_0_0_80px_rgba(0,0,0,0.1)]" />
-      </div>
-      
-      {/* Floating Label (Minimal Glassmorphism) */}
-      <motion.div 
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[85%] p-4 liquid-glass rounded-2xl border border-white/20 backdrop-blur-xl z-20"
-      >
-        <div className="flex justify-between items-center gap-4">
-          <div className="min-w-0">
-            <h3 className="text-lg md:text-xl font-display font-bold italic text-text-deep tracking-tight truncate">
-              {product.name}
-            </h3>
-            <div className="flex items-center gap-2">
-              <span className="text-[8px] font-bold uppercase tracking-widest text-primary italic">£{product.price.toFixed(2)}</span>
-              <span className="text-[8px] font-bold uppercase tracking-widest text-text-deep/20">•</span>
-              <span className="text-[8px] font-bold uppercase tracking-widest text-text-deep/30">{product.category}</span>
-            </div>
-          </div>
-          
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            className="size-8 rounded-full bg-primary text-warm-white flex items-center justify-center hover:bg-accent transition-colors"
+        {/* Editorial Text Overlay (Taste §1 Variance) */}
+        <div className="absolute top-0 left-0 z-0">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Plus className="size-3" />
-          </motion.button>
+            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30 mb-4 block">
+              The Collection
+            </span>
+            <h2 className="text-6xl md:text-[12rem] font-display font-bold italic text-text-deep/5 leading-[0.8] tracking-tighter pointer-events-none select-none">
+              Artisan<br />
+              Selection
+            </h2>
+          </motion.div>
         </div>
-      </motion.div>
 
-      {/* Floating Badge */}
-      <div className="absolute top-4 right-4 z-30">
-        <div className="bg-primary/90 text-warm-white px-3 py-1 rounded-full text-[7px] font-bold uppercase tracking-[0.2em] backdrop-blur-sm shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-          Artisan Selection
+        {/* Layered Image Composition */}
+        <div className="relative w-full max-w-4xl h-full flex items-center justify-center">
+          
+          {/* Left Layer: C1 */}
+          <motion.div 
+            style={{ y: yC1 }}
+            className="absolute -left-4 md:-left-20 top-1/4 w-1/3 md:w-2/5 z-10"
+          >
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="relative aspect-square"
+            >
+              <img 
+                src="/c1.png" 
+                alt="Artisan Showcase Left" 
+                className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+              />
+            </motion.div>
+          </motion.div>
+
+          {/* Right Layer: C2 */}
+          <motion.div 
+            style={{ y: yC2 }}
+            className="absolute -right-4 md:-right-20 top-1/3 w-1/3 md:w-2/5 z-10"
+          >
+            <motion.div
+              animate={{ y: [0, 15, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="relative aspect-square"
+            >
+              <img 
+                src="/c2.png" 
+                alt="Artisan Showcase Right" 
+                className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+              />
+            </motion.div>
+          </motion.div>
+
+          {/* Middle Layer: C3 (The Anchor) */}
+          <motion.div 
+            style={{ y: yC3 }}
+            className="relative w-1/2 md:w-3/5 z-20"
+          >
+            <motion.div
+              animate={{ y: [0, -25, 0], scale: [1, 1.02, 1] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+              className="relative aspect-square"
+            >
+              <img 
+                src="/c3.png" 
+                alt="Artisan Showcase Center" 
+                className="w-full h-full object-contain drop-shadow-[0_30px_70px_rgba(0,0,0,0.2)]"
+              />
+              
+              {/* Subtle Refraction Accent (Creative Arsenal §4) */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/10 to-transparent pointer-events-none opacity-50" />
+            </motion.div>
+          </motion.div>
+
         </div>
+
+        {/* Ambient grain/noise */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03] grain-overlay" />
       </div>
-    </motion.div>
+    </section>
   );
 };
