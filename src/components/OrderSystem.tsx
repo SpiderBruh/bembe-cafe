@@ -27,6 +27,7 @@ export const OrderSystem = ({
   const [orderSuccess, setOrderSuccess] = useState<string | null>(null);
 
   const [customerName, setCustomerName] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [pickupTime, setPickupTime] = useState('');
   const [postcode, setPostcode] = useState('');
@@ -69,7 +70,7 @@ export const OrderSystem = ({
   const total = subtotal + deliveryFee;
 
   const handlePlaceOrder = async () => {
-    if (!customerName || !customerPhone || (orderType === 'delivery' && (!postcode || !street)) || (orderType === 'collect' && !pickupTime)) {
+    if (!customerName || !customerEmail || !customerPhone || (orderType === 'delivery' && (!postcode || !street)) || (orderType === 'collect' && !pickupTime)) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -77,6 +78,7 @@ export const OrderSystem = ({
     try {
       const orderData = {
         customerName,
+        customerEmail,
         customerPhone,
         items: cart.map(item => ({ 
           productId: item.id!, 
@@ -362,6 +364,10 @@ export const OrderSystem = ({
                       <div className="space-y-1.5">
                         <label htmlFor="cart-name" className="text-[10px] font-bold uppercase tracking-widest text-text-deep/40 font-sans">Full Name</label>
                         <input id="cart-name" type="text" className="w-full bg-transparent border-b border-border-warm py-2 font-sans text-sm tracking-wide focus:border-primary outline-none transition-colors" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label htmlFor="cart-email" className="text-[10px] font-bold uppercase tracking-widest text-text-deep/40 font-sans">Email Address</label>
+                        <input id="cart-email" type="email" className="w-full bg-transparent border-b border-border-warm py-2 font-sans text-sm tracking-wide focus:border-primary outline-none transition-colors" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} />
                       </div>
                       <div className="space-y-1.5">
                         <label htmlFor="cart-phone" className="text-[10px] font-bold uppercase tracking-widest text-text-deep/40 font-sans">Phone Number</label>

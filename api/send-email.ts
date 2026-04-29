@@ -50,6 +50,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           </div>
         `,
       });
+    } else if (type === 'order-ready') {
+      const { customerName, customerEmail } = data;
+      await resend.emails.send({
+        from: "Bembe Cafe <orders@bembecafe.com>",
+        to: [customerEmail],
+        subject: `Your Bembe selection is ready for pickup, ${customerName}!`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #2C1810; background-color: #FDFCFB; border: 1px solid #E5E1D8; border-radius: 24px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #6B7C47; font-size: 32px; margin-bottom: 10px;">It's Ready!</h1>
+              <p style="color: #8C867D; font-size: 16px;">Your artisan treats are waiting for you.</p>
+            </div>
+            
+            <p>Hi ${customerName},</p>
+            <p>Great news! Our team has finished preparing your order with care. You can now head over to our boutique to collect your selection.</p>
+            
+            <div style="background-color: #F5F0E8; padding: 20px; border-radius: 12px; margin: 30px 0; text-align: center;">
+              <p style="margin: 0; font-weight: bold; color: #6B7C47;">Pick up at: Bembe Cafe Manchester</p>
+            </div>
+
+            <p style="font-size: 14px; color: #8C867D; line-height: 1.6;">We can't wait to see you!</p>
+            
+            <hr style="border: 0; border-top: 1px solid #E5E1D8; margin: 30px 0;" />
+            <p style="font-size: 12px; color: #D4C9B0; text-align: center;">Bembe Cafe • Artisan Coffee & Bakery</p>
+          </div>
+        `,
+      });
     } else if (type === 'booking') {
       const { name, date, time, guests, phone } = data;
       await resend.emails.send({

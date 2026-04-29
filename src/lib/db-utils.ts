@@ -36,8 +36,9 @@ export interface Order {
   }[];
   total: number;
   customerName: string;
+  customerEmail: string;
   customerPhone: string;
-  status: 'pending' | 'completed' | 'cancelled';
+  status: 'pending' | 'ready' | 'completed' | 'cancelled';
   createdAt: any;
 }
 

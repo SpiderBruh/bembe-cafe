@@ -22,12 +22,21 @@ export const ProductShowcase = () => {
     });
   }, []);
 
-  if (loading) return null;
-
   return (
     <section ref={scrollRef} className="relative py-32 overflow-hidden bg-[#FDFCFB]">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-        <div className="flex flex-col lg:flex-row gap-16 lg:items-start">
+        {loading ? (
+          <div className="h-[60vh] flex items-center justify-center">
+            <motion.div 
+              animate={{ opacity: [0.4, 0.7, 0.4] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30"
+            >
+              Loading Artisan Collection
+            </motion.div>
+          </div>
+        ) : (
+          <div className="flex flex-col lg:flex-row gap-16 lg:items-start">
           
           {/* Left: Sticky Branding (Design Variance: 8) */}
           <div className="lg:w-1/3 lg:sticky lg:top-32">
@@ -80,7 +89,7 @@ export const ProductShowcase = () => {
               />
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Decorative grain/noise (Performance Guardrail: §5) */}

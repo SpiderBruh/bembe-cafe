@@ -420,9 +420,23 @@ const ProductModal = ({ product, onClose }: { product: Product | null, onClose: 
 
 /* ── Tabs Content ── */
 const OrdersTab = ({ orders }: { orders: any[] }) => {
-  const updateStatus = async (id: string, status: string) => {
+  const updateStatus = async (id: string, status: string, orderData?: any) => {
     try {
       await updateDoc(doc(db, 'orders', id), { status });
+      
+      // Notify customer if order is ready
+      if (status === 'ready' && orderData?.customerEmail) {
+        await fetch('/api/upload?filename=dummy', { method: 'GET' }); // Warm up if needed
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            type: 'order-ready', 
+            customerName: orderData.customerName,
+            customerEmail: orderData.customerEmail 
+          })
+        });
+      }
     } catch (e) {
       handleFirestoreError(e, OperationType.UPDATE, 'orders');
     }
@@ -451,6 +465,7 @@ const OrdersTab = ({ orders }: { orders: any[] }) => {
                 <section>
                   <p className="text-[9px] font-bold uppercase tracking-widest text-text-deep/30 mb-2 font-sans">Customer Presence</p>
                   <p className="font-bold text-lg">{order.customerName}</p>
+                  <p className="text-xs text-primary font-bold italic mb-1">{order.customerEmail}</p>
                   <p className="text-sm text-text-deep/50">{order.customerPhone}</p>
                 </section>
                 <section className="bg-background-soft p-4 rounded-2xl border border-border-warm/50">
@@ -483,7 +498,7 @@ const OrdersTab = ({ orders }: { orders: any[] }) => {
             {['preparing', 'ready', 'completed', 'cancelled'].map(status => (
               <button 
                 key={status}
-                onClick={() => updateStatus(order.id, status)}
+                onClick={() => updateStatus(order.id, status, order)}
                 className={`px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all border-2 ${order.status === status ? 'bg-primary border-primary text-warm-white shadow-lg scale-[1.02]' : 'bg-transparent border-border-warm/30 text-text-deep/30 hover:border-primary/40 hover:text-text-deep'}`}
               >
                 {status}
@@ -687,8 +702,9 @@ const getStatusStyle = (status: string) => {
   switch (status) {
     case 'new': case 'pending': return 'bg-primary text-warm-white shadow-lg shadow-primary/20';
     case 'preparing': return 'bg-amber-50 text-amber-600 border border-amber-100';
-    case 'ready': case 'confirmed': return 'bg-green-50 text-green-600 border border-green-100';
-    case 'completed': return 'bg-[#FDFCFB] text-text-deep/30 border border-border-warm/50';
+    case 'ready': return 'bg-orange-50 text-orange-600 border border-orange-200 font-black';
+    case 'confirmed': return 'bg-green-50 text-green-600 border border-green-100';
+    case 'completed': return 'bg-green-600 text-warm-white shadow-lg shadow-green-200';
     case 'cancelled': return 'bg-red-50 text-red-600 border border-red-100';
     default: return 'bg-[#FDFCFB] text-text-deep/30';
   }

@@ -118,11 +118,11 @@ function MainSite() {
         {/* 1. Hero — first impression */}
         <Hero />
 
-        {/* Product Showcase — cinematic experience */}
-        <ProductShowcase />
-
         {/* Pie Break — playful transition */}
         <PieBreak />
+
+        {/* Product Showcase — cinematic experience */}
+        <ProductShowcase />
 
         {/* 2. Trust Marquee — immediate social proof */}
         <TrustMarquee />
