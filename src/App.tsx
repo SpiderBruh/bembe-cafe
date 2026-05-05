@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { auth, db } from './lib/firebase';
 import { seedProducts, Product } from './lib/db-utils';
-import { motion } from 'framer-motion';
 
 // Public Components
 import Hero from './components/ui/hero';
@@ -32,7 +32,7 @@ function SocialWidgets() {
       initial={{ opacity: 0, x: 50, y: 50 }}
       animate={{ opacity: 1, x: 0, y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20, delay: 1.5 }}
-      className="fixed bottom-20 md:bottom-24 right-4 md:right-8 z-40 flex flex-col gap-3 items-end"
+      className="fixed bottom-24 md:bottom-24 right-4 md:right-8 z-40 flex flex-col gap-3 items-end"
     >
       {/* Facebook Messenger */}
       <a
@@ -93,47 +93,19 @@ function LoadingScreen() {
   );
 }
 
-function MainSite() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<any[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  useEffect(() => {
-    seedProducts();
-    const q = query(collection(db, 'products'), orderBy('order', 'asc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product)));
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const cartCount = cart.reduce((acc, item) => acc + item.qty, 0);
+function MainSite({ cart, setCart, isCartOpen, setIsCartOpen, products }: any) {
+  const cartCount = cart.reduce((acc: number, item: any) => acc + item.qty, 0);
 
   return (
     <SmoothScroll>
       <div className="min-h-[100dvh] bg-background">
         <Navbar cartCount={cartCount} onCartClick={() => setIsCartOpen(true)} />
-
-        {/* ── Conversion-Optimized Section Order ── */}
-        {/* 1. Hero — first impression */}
         <Hero />
-
-        {/* Pie Break — playful transition */}
         <PieBreak />
-
-        {/* Product Showcase — cinematic experience */}
-        <ProductShowcase />
-
-        {/* 2. Trust Marquee — immediate social proof */}
+        {/* <ProductShowcase /> */}
         <TrustMarquee />
-
-        {/* 3. Gallery — emotional hook ("I want to be there") */}
         <CommunityGallery />
-
-        {/* 4. About — builds connection + context */}
         <AboutStrip />
-
-        {/* 5. Menu — they're primed and ready to browse */}
         <OrderSystem
           products={products}
           cart={cart}
@@ -141,17 +113,9 @@ function MainSite() {
           isCartOpen={isCartOpen}
           setIsCartOpen={setIsCartOpen}
         />
-
-        {/* 6. Reviews — social proof reinforces menu decision */}
         <ReviewsSection />
-
-        {/* 7. Booking — CTA at peak intent */}
         <BookingSection />
-
-        {/* 8. Footer */}
         <Footer />
-
-        {/* Floating elements */}
         <StickyCTA />
         <SocialWidgets />
       </div>
@@ -161,29 +125,82 @@ function MainSite() {
 
 export default function App() {
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [cart, setCart] = useState<any[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  
+  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [isPageReady, setIsPageReady] = useState(false);
+  const [isDataReady, setIsDataReady] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
+    // 1. Auth Status
+    const unsubscribeAuth = onAuthStateChanged(auth, (u) => {
       setUser(u);
-      setLoading(false);
+      setIsAuthReady(true);
     });
-    return () => unsubscribe();
+
+    // 2. Data Loading
+    seedProducts();
+    const q = query(collection(db, 'products'), orderBy('order', 'asc'));
+    const unsubscribeDb = onSnapshot(q, (snapshot) => {
+      setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product)));
+      setIsDataReady(true);
+    });
+
+    // 3. Asset Loading
+    if (document.readyState === 'complete') {
+      setIsPageReady(true);
+    } else {
+      const handleLoad = () => setIsPageReady(true);
+      window.addEventListener('load', handleLoad);
+      return () => {
+        unsubscribeAuth();
+        unsubscribeDb();
+        window.removeEventListener('load', handleLoad);
+      };
+    }
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribeDb();
+    };
   }, []);
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
+  const isLoading = !isAuthReady || !isPageReady || !isDataReady;
 
   return (
     <Router>
       <Analytics />
-      <Routes>
-        <Route path="/" element={<MainSite />} />
-        <Route path="/admin" element={user ? <AdminDashboard /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/login" element={user ? <Navigate to="/admin" /> : <AdminLogin onLogin={() => {}} />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <div className="relative">
+        <AnimatePresence mode="wait">
+          {isLoading ? (
+            <motion.div
+              key="loader"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } }}
+              className="fixed inset-0 z-[100]"
+            >
+              <LoadingScreen />
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+        <Routes>
+          <Route path="/" element={
+            <MainSite 
+              cart={cart} 
+              setCart={setCart} 
+              isCartOpen={isCartOpen} 
+              setIsCartOpen={setIsCartOpen} 
+              products={products}
+            />
+          } />
+          <Route path="/admin" element={user ? <AdminDashboard /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/login" element={user ? <Navigate to="/admin" /> : <AdminLogin onLogin={() => {}} />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

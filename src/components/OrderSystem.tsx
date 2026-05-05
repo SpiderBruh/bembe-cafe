@@ -117,15 +117,15 @@ export const OrderSystem = ({
   };
 
   return (
-    <section id="menu" className="relative py-28 md:py-36 bg-background overflow-hidden">
+    <section id="menu" className="relative py-16 md:py-36 bg-background overflow-hidden">
       {/* Ambient blurs — desaturated */}
       <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[250px] h-[250px] bg-accent/4 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
         {/* Section Header — asymmetric layout */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-10 border-b border-border-warm">
-          <div className="max-w-xl">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-10 border-b border-border-warm">
+          <div className="max-w-xl text-center md:text-left">
             <motion.span
               initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -150,7 +150,7 @@ export const OrderSystem = ({
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.15 }}
-            className="text-text-deep/45 max-w-xs text-base font-light leading-relaxed"
+            className="text-text-deep/45 max-w-xs text-sm md:text-base font-light leading-relaxed text-center md:text-left mx-auto md:mx-0"
           >
             Freshly prepared, halal ingredients, and coffee crafted with boutique precision.
           </motion.p>
@@ -210,7 +210,7 @@ export const OrderSystem = ({
                 className="group relative flex flex-col sm:flex-row bg-warm-white/60 rounded-2xl border border-border-warm/40 overflow-hidden hover:border-primary/25 transition-all duration-300 tinted-shadow-sm hover:tinted-shadow cursor-pointer"
               >
                 {/* Image — full color, no grayscale (anti-pattern: poor food photos) */}
-                <div className="sm:w-[200px] h-[220px] sm:h-auto overflow-hidden relative shrink-0">
+                <div className="sm:w-[200px] h-[180px] sm:h-auto overflow-hidden relative shrink-0">
                   <img
                     src={p.imageUrl}
                     alt={p.name}

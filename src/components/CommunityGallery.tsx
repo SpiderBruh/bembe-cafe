@@ -95,7 +95,7 @@ export const CommunityGallery = () => {
         </div>
 
         {/* Mobile — Horizontal scroll with snap */}
-        <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 scrollbar-hide">
+        <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 -mx-6 px-6 scrollbar-hide">
           {galleryItems.map((item, idx) => (
             <motion.div
               key={idx}
@@ -122,6 +122,13 @@ export const CommunityGallery = () => {
                 </h3>
               </div>
             </motion.div>
+          ))}
+        </div>
+        
+        {/* Mobile Scroll Indicator (taste §3 Rule 5) */}
+        <div className="md:hidden flex justify-center gap-1.5 mt-2">
+          {galleryItems.map((_, idx) => (
+            <div key={idx} className="h-1 w-4 rounded-full bg-primary/10" />
           ))}
         </div>
       </div>

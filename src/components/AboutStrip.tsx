@@ -73,8 +73,12 @@ export const AboutStrip = () => {
   };
 
   return (
-    <section id="about" className="py-28 md:py-36 bg-background relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
+    <section id="about" className="py-16 md:py-36 bg-background relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
+        {/* Decorative background text — hidden on mobile to prevent overflow (taste §3 Rule 2) */}
+        <div className="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/3 text-[20rem] font-display font-black text-primary/5 select-none pointer-events-none hidden lg:block">
+          Bembe
+        </div>
         {/* ── Social Proof Counters ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -94,6 +98,13 @@ export const AboutStrip = () => {
             </div>
           ))}
         </motion.div>
+        
+        {/* Mobile Scroll Hint */}
+        <div className="md:hidden flex justify-center gap-1.5 mt-2">
+          {badges.map((_, idx) => (
+            <div key={idx} className="h-1 w-4 rounded-full bg-primary/10" />
+          ))}
+        </div>
 
         {/* Asymmetric grid: 1.5fr 1fr (taste §3 Rule 3, DESIGN_VARIANCE 7) */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-16 lg:gap-20 items-start">
@@ -107,14 +118,14 @@ export const AboutStrip = () => {
           >
             <motion.span
               variants={itemVariants}
-              className="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-4 block font-sans"
+              className="text-xs font-bold tracking-[0.3em] uppercase text-primary mb-4 block font-sans text-center lg:text-left"
             >
               Our Story
             </motion.span>
 
             <motion.h2
               variants={itemVariants}
-              className="font-display text-3xl md:text-5xl font-bold mb-8 text-text-deep tracking-tight leading-tight"
+              className="font-display text-3xl md:text-5xl font-bold mb-8 text-text-deep tracking-tight leading-tight text-center lg:text-left"
             >
               A Community Heart in{' '}
               <span className="italic text-primary">Alexandra Park</span>
@@ -122,7 +133,7 @@ export const AboutStrip = () => {
 
             <motion.p
               variants={itemVariants}
-              className="text-lg text-text-deep/70 leading-relaxed mb-10 prose-width"
+              className="text-base md:text-lg text-text-deep/70 leading-relaxed mb-10 prose-width text-center lg:text-left mx-auto lg:mx-0"
             >
               Bembe Cafe is more than just a place for coffee. Nestled in the
               historic Alexandra Park, we are a sanctuary for families, workers,
@@ -133,9 +144,25 @@ export const AboutStrip = () => {
             </motion.p>
 
             {/* Badges — rounded, tinted shadows */}
+            {/* Mobile — Horizontal scroll with snap */}
+            <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-8 -mx-6 px-6 scrollbar-hide">
+              {badges.map((badge, idx) => (
+                <motion.div
+                  key={idx}
+                  variants={itemVariants}
+                  className="flex flex-col items-center min-w-[120px] p-4 bg-card rounded-2xl tinted-shadow-sm text-center gap-2 cursor-default hover:bg-warm-white transition-colors duration-200 snap-center"
+                >
+                  <div className="text-primary">{badge.icon}</div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-text-deep/60 font-sans">
+                    {badge.label}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+
             <motion.div
               variants={containerVariants}
-              className="grid grid-cols-2 md:grid-cols-4 gap-3"
+              className="hidden md:grid grid-cols-2 md:grid-cols-4 gap-3"
             >
               {badges.map((badge, idx) => (
                 <motion.div

@@ -50,9 +50,11 @@ export default function Hero() {
   const { scrollY } = useScroll()
 
   // Motion Parallax
-  const textY1 = useTransform(scrollY, [0, 1000], [0, -200])
-  const textY2 = useTransform(scrollY, [0, 1000], [0, -100])
-  const textY3 = useTransform(scrollY, [0, 1000], [0, -300])
+  // Motion Parallax — subtler on mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const textY1 = useTransform(scrollY, [0, 1000], [0, isMobile ? -50 : -200])
+  const textY2 = useTransform(scrollY, [0, 1000], [0, isMobile ? -25 : -100])
+  const textY3 = useTransform(scrollY, [0, 1000], [0, isMobile ? -75 : -300])
   const opacity = useTransform(scrollY, [0, 500], [1, 0])
 
   const itemVariants: Variants = {
@@ -67,7 +69,7 @@ export default function Hero() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[100vh] w-full overflow-hidden bg-[#0A0A0A] flex flex-col justify-center px-8 md:px-24 py-32"
+      className="relative h-[100vh] w-full overflow-hidden bg-[#0A0A0A] flex flex-col justify-center px-6 md:px-24 py-20 md:py-32"
     >
       {/* ── Background Video ── */}
       <div className="absolute inset-0 z-0">
@@ -88,8 +90,8 @@ export default function Hero() {
           variants={itemVariants}
           className="self-start"
         >
-          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary mb-4 block">Boutique Experience</span>
-          <h1 className="text-7xl md:text-[10rem] font-display font-bold text-warm-white leading-none tracking-tighter">
+          <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary mb-2 md:mb-4 block">Boutique Experience</span>
+          <h1 className="text-5xl sm:text-6xl md:text-[10rem] font-display font-bold text-warm-white leading-[0.9] tracking-tighter">
             Authentic
           </h1>
         </motion.div>
@@ -102,8 +104,8 @@ export default function Hero() {
           variants={itemVariants}
           className="self-center flex flex-col items-center gap-6"
         >
-          <div className="h-[1px] w-32 bg-primary/30" />
-          <h2 className="text-5xl md:text-8xl font-display italic font-light text-primary tracking-tight">
+          <div className="h-[1px] w-20 md:w-32 bg-primary/30" />
+          <h2 className="text-4xl md:text-8xl font-display italic font-light text-primary tracking-tight">
             Artisan
           </h2>
           <motion.p 
@@ -121,12 +123,12 @@ export default function Hero() {
           variants={itemVariants}
           className="self-end flex flex-col items-end gap-12"
         >
-          <h1 className="text-7xl md:text-[10rem] font-display font-bold text-warm-white leading-none tracking-tighter">
+          <h1 className="text-5xl sm:text-6xl md:text-[10rem] font-display font-bold text-warm-white leading-[0.9] tracking-tighter">
             Cafe<span className="text-primary">.</span>
           </h1>
           
-          <div className="flex items-center gap-10">
-            <button className="group flex flex-col items-end gap-1">
+          <div className="flex items-center gap-6 md:gap-10">
+            <button className="group hidden sm:flex flex-col items-end gap-1">
               <span className="text-[9px] font-black uppercase tracking-[0.3em] text-warm-white/30 group-hover:text-primary transition-colors">Manchester 2024</span>
               <div className="h-px w-6 bg-primary/30 group-hover:w-16 transition-all duration-500" />
             </button>
